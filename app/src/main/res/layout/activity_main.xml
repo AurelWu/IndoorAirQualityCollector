@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/RadioButtonSearchRange250m"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/LinearLayoutTitleBar"
+            android:layout_width="match_parent"
+            android:layout_height="18pt"
+            android:background="#77A6AC"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:autoSizeMaxTextSize="24sp"
+                android:autoSizeMinTextSize="12sp"
+                android:autoSizeTextType="uniform"
+                android:gravity="center_vertical"
+                android:text="Indoor Air Quality Data Collector"
+                android:textAlignment="center" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/LinearLayoutStatusButtons"
+            android:layout_width="match_parent"
+            android:layout_height="32pt"
+            android:background="#77A6AC"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/imageButtonGPS"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:onClick="OnButtonClickGPS"
+                android:scaleX="1"
+                android:scaleY="1"
+                app:srcCompat="@drawable/icon_gps" />
+
+            <ImageButton
+                android:id="@+id/buttonLocationPermissionStatus"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:onClick="OnButtonClickLocationPermission"
+                app:srcCompat="@drawable/icon_location" />
+
+            <ImageButton
+                android:id="@+id/buttonBluetoothStatus"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:onClick="OnButtonClickBluetooth"
+                app:srcCompat="@android:drawable/stat_sys_data_bluetooth" />
+
+            <ImageButton
+                android:id="@+id/buttonBluetoothScanPermission"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:onClick="OnButtonBTScanPermission"
+                app:srcCompat="@android:drawable/stat_sys_data_bluetooth" />
+
+            <ImageButton
+                android:id="@+id/imageButtonBluetoothConnectPermission"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:onClick="OnButtonBTConnectPermission"
+                app:srcCompat="@android:drawable/stat_sys_data_bluetooth" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/LinearLayoutStatus"
+            android:layout_width="match_parent"
+            android:layout_height="24pt"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textViewStatus"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="TextView" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/LinearLayoutSensorStatus"
+            android:layout_width="match_parent"
+            android:layout_height="24pt"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textViewSensorStatus"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="Sensor Status:"
+                android:textAlignment="textStart"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/LinearLayoutLocationStatus"
+            android:layout_width="match_parent"
+            android:layout_height="24pt"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textViewLocationStatus"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="TextView" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/LinearLayoutSearchRange"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="4dp">
+
+            <TextView
+                android:id="@+id/textViewSearchRange"
+                android:layout_width="103dp"
+                android:layout_height="match_parent"
+                android:layout_weight=".5"
+                android:gravity="center"
+                android:text="Search Range:" />
+
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+
+                <RadioButton
+                    android:id="@+id/radioButtonSearchRange50m"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="50m" />
+
+                <RadioButton
+                    android:id="@+id/radioButtonSearchRange100m"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:enabled="true"
+                    android:saveEnabled="false"
+                    android:text="100m" />
+
+                <RadioButton
+                    android:id="@+id/radioButtonSearchRange250m"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="250m" />
+
+            </RadioGroup>
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/buttonUpdateNearbyLocations"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:enabled="false"
+            android:onClick="OnButtonClickUpdateLocationSpinner"
+            android:text="Update Nearby Locations" />
+
+        <LinearLayout
+            android:id="@+id/LinearLayoutLocationSelector"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textViewLocationSelectionText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:gravity="center"
+                android:text="Select Location: " />
+
+            <Spinner
+                android:id="@+id/spinnerSelectLocation"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/buttonStartRecording"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:enabled="false"
+            android:onClick="OnStartRecordingButton"
+            android:text="Start Recording"
+            android:textSize="24sp" />
+
+        <LinearLayout
+            android:id="@+id/linearLayoutEndRecording"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <Button
+                android:id="@+id/buttonStopRecording"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="4"
+                android:onClick="OnFinishAndSubmitRecording"
+                android:text="Finish and Submit" />
+
+            <Button
+                android:id="@+id/buttonAbort"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:onClick="OnCancelRecording"
+                android:text="Cancel" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/LinearLayoutLineChartContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:visibility="gone" >
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/LinearLayoutCheckboxes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <CheckBox
+                android:id="@+id/checkBoxWindowsDoors"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Open Windows/Doors" />
+
+            <CheckBox
+                android:id="@+id/checkBoxVentilationSystem"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="VentilationSystem" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/LinearLayoutOccupancy"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/textView5"
+                android:layout_width="80dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="Occupancy" />
+
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="50"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/radioButtonLowOccupancy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="5"
+                    android:text="low" />
+
+                <RadioButton
+                    android:id="@+id/radioButtonMediumOccupancy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="5"
+                    android:text="medium" />
+
+                <RadioButton
+                    android:id="@+id/radioButtonHighOccupancy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="5"
+                    android:text="high" />
+            </RadioGroup>
+        </LinearLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/TextInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:visibility="gone">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/TextInputEditTextNotes"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="start|top"
+                android:hint="enter additional info (optional)"
+                android:inputType="textMultiLine" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

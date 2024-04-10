@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     ImageButton buttonBluetoothScanPermission;
     ImageButton buttonBluetoothConnectPermission;
     Button buttonStartRecording;
+    Button buttonFinishRecording;
     Button buttonUpdateNearByLocations;
     Spinner locationSpinner;
 
@@ -62,7 +63,6 @@ public class MainActivity extends AppCompatActivity {
     RadioButton radioButtonOccupancyMedium;
     RadioButton radioButtonOccupancyHigh;
 
-    Button buttonFinishAndSubmitRecording;
     LinearLayout layoutSearchRangeSelection;
     LinearLayout layoutLocationSelection;
     LinearLayout layoutStopRecording;
@@ -86,21 +86,21 @@ public class MainActivity extends AppCompatActivity {
     //DONE (user needs to do it in official APP) TODO: Monday => Show error if Update Interval is not set to 1 Minute (and maybe even to change update value programmatically in this app, if not tell to use official app!)
     //DONE TODO: Tuesday => Populate Location-Spinner and allow Selection & also allow to set different Ranges (50m, 100m, 250m)
     //DONE BUT IN MAIN SCREEN WITH HIDING OTHER ELEMENTS TODO: Wednesday => Create Recording Screen (=> display time to next update, display chart,
-    //TODO WEDNESDAY:     add trim-range slider,
-    // DONE TODO: add selection for occupancy and maybe
+    //DONE TODO: add selection for occupancy and maybe
     //DONE TODO:     2-3 checkboxes for open windows etc.,
     //DONE TODO:     add Freeform text field for custom Notes of Submitter
     //SEMI DONE (BUTTONS ARE THERE BUT SUBMITTING NOT DONE) TODO:     add Button to cancel recording and to submit recorded Data, both should have a confirmation
-    //TODO: Build JSON to SUBMIT
-    //TODO: WEDNESDAY: Submit to S3 Cloud temporarily
-    //TODO: Thursday: Create Database Tables and submit to that instead
-    //TODO: Do some real Measurements
-    //TODO: Friday+Weekend: Start working on the Map and create first prototype of Map
-    //TODO: LATER: integrate Map into the App(?)
-    //TODO: Scan Callback is called during scan again and again... not horrible, but not clean, fix if easily possible
     //DONE TODO: Start recording button disable if no location selected;s
-    //TODO: => MAKE SURE IT RUNS IN BACKGROUND!!!!
-    //TODO: Checkboxes  with 3 States (undefined, yes , no)
+    //SEMIDONE: SEEMS TO WORK ANYWAYSTODO: => MAKE SURE IT RUNS IN BACKGROUND!!!!
+    //x TODO: Build JSON to SUBMIT
+    //x TODO: WEDNESDAY: Submit to S3 Cloud temporarily
+    //x TODO: Thursday: Create Database Tables and submit to that instead
+    //x TODO: Do some real Measurements
+    //x TODO: Friday+Weekend: Start working on the Map and create first prototype of Map
+    //TODO: => OUT OF SCOPE, ADD IN 2nd VERSION integrate Map into the App(?)
+    //TODO: => OUT OF SCOPE, FIX IN 2nd VERSION: Scan Callback is called during scan again and again... not horrible, but not clean, fix if easily possible
+    //TODO => OUT OF SCOPE, ADD IN 2nd VERSION (undefined, yes , no)
+    //TODO => OUT OF SCOPE, ADD IN 2nd VERSION     add trim-range slider,
 
     private final Handler UIUpdater = new Handler();
 
@@ -126,6 +126,7 @@ public class MainActivity extends AppCompatActivity {
         textViewSensorStatus = findViewById(R.id.textViewSensorStatus);
         textViewLocationStatus = findViewById(R.id.textViewLocationStatus);
         buttonStartRecording = findViewById(R.id.buttonStartRecording);
+        buttonFinishRecording = findViewById(R.id.buttonFinishRecording);
         radioButton50mRange = findViewById(R.id.radioButtonSearchRange50m);
         radioButton100mRange = findViewById(R.id.radioButtonSearchRange100m);
         radioButton250mRange = findViewById(R.id.radioButtonSearchRange250m);
@@ -412,11 +413,13 @@ public class MainActivity extends AppCompatActivity {
 
             if(logic.aranetManager.GetCO2Data().length<5)
             {
-                buttonFinishAndSubmitRecording.setEnabled(false);
+                buttonFinishRecording.setEnabled(false);
+                buttonFinishRecording.setText("Submit (available after 5 minutes)");
             }
             else
             {
-                buttonFinishAndSubmitRecording.setEnabled(true);
+                buttonFinishRecording.setEnabled(true);
+                buttonFinishRecording.setText("Submit Data");
             }
         }
     }

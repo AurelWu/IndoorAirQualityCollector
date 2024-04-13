@@ -1,6 +1,11 @@
 package com.example.indoorairqualitycollector;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.List;
+
+import kotlin.NotImplementedError;
 
 public class SubmissionData
 {
@@ -24,5 +29,39 @@ public class SubmissionData
         this.startTime = startTime;
         this.nwrLatitude = nwrLat;
         this.nwrLongitude = nwrLon;
+    }
+
+    public String toJson() {
+        //throw new NotImplementedError();
+        JSONObject json = new JSONObject();
+
+        String[] ppmArray = new String[sensorData.size()];
+        String[] timestampArray = new String[sensorData.size()];
+
+        for (int i = 0; i < sensorData.size(); i++) {
+            SensorData data = sensorData.get(i);
+            ppmArray[i] = String.valueOf(data.CO2ppm);
+            timestampArray[i] = String.valueOf(data.timeStamp);
+        }
+
+        try {
+            json.put("d", sensorID);
+            json.put("i", nwrID);
+            json.put("n", nwrName);
+            json.put("b", startTime);
+            json.put("x", nwrLongitude); //x = lon
+            json.put("y", nwrLatitude); //y = lat
+            json.put("w", openWindowsDoors);
+            json.put("v", ventilationSystem);
+            json.put("o", OccupancyLevel);
+            json.put("a", AdditionalNotes);
+            json.put("c", Converter.arrayToString(ppmArray,";"));
+            json.put("t", Converter.arrayToString(timestampArray,";"));
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return json.toString();
     }
 }

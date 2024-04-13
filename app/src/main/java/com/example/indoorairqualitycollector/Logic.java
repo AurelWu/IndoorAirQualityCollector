@@ -20,6 +20,7 @@ public class Logic {
     {
         submissionData = new SubmissionData(aranetManager.aranetMAC, nwrID,nwrName,nwrLat,nwrLon,startTime);
         aranetManager.StartNewRecording(); //we dont' provide full submissionData to aranetManager and rather collect its Data once FinishRecording is called from here
+
     }
     public void FinishRecording(boolean windowDoorState,boolean ventilationSystem, String occupancy, String notes)
     {
@@ -28,10 +29,12 @@ public class Logic {
         submissionData.ventilationSystem = ventilationSystem;
         submissionData.OccupancyLevel = occupancy;
         submissionData.AdditionalNotes = notes;
+        aranetManager.FinishRecording();
     }
 
-    public void SubmitRecordedData()
+    public String GenerateJSONToTransmit()
     {
-
+        String jsonToSubmit = submissionData.toJson();
+        return jsonToSubmit;
     }
 }

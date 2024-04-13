@@ -1,7 +1,9 @@
 package com.example.indoorairqualitycollector;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -13,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -79,7 +82,11 @@ public class MainActivity extends AppCompatActivity {
 
     public boolean invalidateLocations = false;
 
+    public String transmissionState = "";
+
     Logic logic;
+
+    LocationData selectedLocation = null;
 
     //DONE (no pairing required) TODO: Monday => Display Sensor ID and if no sensor paired then open pairing Dialog, mention that currently only Aranet is supported
     //DONE TODO: Monday => Display current CO2-Value and Update Interval
@@ -94,13 +101,18 @@ public class MainActivity extends AppCompatActivity {
     //SEMIDONE: SEEMS TO WORK ANYWAYSTODO: => MAKE SURE IT RUNS IN BACKGROUND!!!!
     //x TODO: Build JSON to SUBMIT
     //x TODO: WEDNESDAY: Submit to S3 Cloud temporarily
+    //  TODO: SANITIZE DATA IN LAMBDA (CHeck size in general, of array, length of strings)
     //x TODO: Thursday: Create Database Tables and submit to that instead
     //x TODO: Do some real Measurements
     //x TODO: Friday+Weekend: Start working on the Map and create first prototype of Map
     //TODO: => OUT OF SCOPE, ADD IN 2nd VERSION integrate Map into the App(?)
     //TODO: => OUT OF SCOPE, FIX IN 2nd VERSION: Scan Callback is called during scan again and again... not horrible, but not clean, fix if easily possible
     //TODO => OUT OF SCOPE, ADD IN 2nd VERSION (undefined, yes , no)
-    //TODO => OUT OF SCOPE, ADD IN 2nd VERSION     add trim-range slider,
+    //TODO => OUT OF SCOPE, ADD IN 2nd VERSION     add two-sided trim-range slider,
+    //TODO INSTEAD Just DO slider which can trim end (as thats the more important use case, if start is messed up you can just start again no biggie)
+    //TODO IMPORTANT WHEN SENDING CHECK IF WE GET SUCESS FROM LAMBDA FUNCTION AND GIVE USER FEEDBACK THAT IT WAS SUCCESSFUL!
+    //TODO: Fix name of NRW to NWR in DB...
+
 
     private final Handler UIUpdater = new Handler();
 
@@ -117,6 +129,7 @@ public class MainActivity extends AppCompatActivity {
 
         logic = new Logic(this);
 
+        buttonUpdateNearByLocations = findViewById(R.id.buttonUpdateNearbyLocations);
         buttonGPSStatus = findViewById(R.id.imageButtonGPS);
         buttonBluetooth = findViewById(R.id.buttonBluetoothStatus);
         buttonLocationPermissionStatus = findViewById(R.id.buttonLocationPermissionStatus);
@@ -166,7 +179,7 @@ public class MainActivity extends AppCompatActivity {
         layoutOccupancy = findViewById(R.id.LinearLayoutOccupancy);
 
 
-        buttonUpdateNearByLocations = findViewById(R.id.buttonUpdateNearbyLocations);
+
         locationSpinner = findViewById(R.id.spinnerSelectLocation);
 
 
@@ -177,13 +190,16 @@ public class MainActivity extends AppCompatActivity {
 
     public void OnStartRecordingButton(View view)
     {
-        LocationData selectedLocation = (LocationData)locationSpinner.getSelectedItem();
+
+        transmissionState = "none";
+        selectedLocation = (LocationData)locationSpinner.getSelectedItem();
         if(selectedLocation==null)
         {
             //maybe display message that no location selected?)
             return;
         }
         //TODO:
+        buttonFinishRecording.setEnabled(false);
         layoutStopRecording.setVisibility(View.VISIBLE);
         layoutSearchRangeSelection.setVisibility(View.GONE);
         layoutLocationSelection.setVisibility(View.GONE);
@@ -198,19 +214,46 @@ public class MainActivity extends AppCompatActivity {
 
 
         logic.StartNewRecording(selectedLocation.ID,selectedLocation.Name,selectedLocation.latitude,selectedLocation.longitude,System.currentTimeMillis());
+        checkBoxVentilationSystem.setChecked(false);
+        checkBoxWindowsDoors.setChecked(false);
+        occupancyLevel = "undefined";
+
     }
 
     public void OnFinishAndSubmitRecording(View view)
     {
-
         logic.FinishRecording(checkBoxWindowsDoors.isChecked(),checkBoxVentilationSystem.isChecked(),occupancyLevel,textInputEditTextCustomNotes.getText().toString());
-        logic.SubmitRecordedData();
-        OnStopRecordingChangeUI();
+        String json = logic.GenerateJSONToTransmit();
+        transmissionState = "none";
+        buttonFinishRecording.setEnabled(false);
+        ApiGatewayCaller.sendJsonToApiGateway(json,this);
+    }
+
+    public void OnTransmissionSuccess()
+    {
+        buttonFinishRecording.setText("Transmission successful!");
+
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                OnStopRecordingChangeUI();
+            }
+        }, 5000); // 3000 milliseconds = 3 seconds
+    }
+
+    public void OnTransmissionFail(String failureMode)
+    {
+        buttonFinishRecording.setText(failureMode);
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                buttonFinishRecording.setEnabled(true);
+            }
+        }, 2000); // 3000 milliseconds = 3 seconds
     }
 
     public void OnCancelRecording(View view)
     {
-
         logic.FinishRecording(checkBoxWindowsDoors.isChecked(),checkBoxVentilationSystem.isChecked(),occupancyLevel,textInputEditTextCustomNotes.getText().toString());
         OnStopRecordingChangeUI();
 
@@ -389,8 +432,14 @@ public class MainActivity extends AppCompatActivity {
         {
             if(logic.spatialManager.myLatitude != 0 || logic.spatialManager.myLongitude != 0)
             {
-                textViewLocationStatus.setText("Current Location:\r\nLat: " + String.format("%.6f", logic.spatialManager.myLatitude) + "\r\nLon: " + String.format("%.6f", logic.spatialManager.myLongitude));
-
+                if(logic.aranetManager.isRecording && selectedLocation!=null)
+                {
+                    textViewLocationStatus.setText("Recording data of Location: " + selectedLocation.Name+"\r\n"+ String.format("%.6f", selectedLocation.latitude) + " | " + String.format("%.6f", selectedLocation.longitude ));
+                }
+                else
+                {
+                    textViewLocationStatus.setText("Current Location:\r\nLat: " + String.format("%.6f", logic.spatialManager.myLatitude) + "\r\nLon: " + String.format("%.6f", logic.spatialManager.myLongitude));
+                }
                 buttonUpdateNearByLocations.setEnabled(true);
             }
             else
@@ -421,6 +470,14 @@ public class MainActivity extends AppCompatActivity {
                 buttonFinishRecording.setEnabled(true);
                 buttonFinishRecording.setText("Submit Data");
             }
+        }
+        if(transmissionState == "failure")
+        {
+            buttonFinishRecording.setText("Failed to Submit Data, try again");
+        }
+        if(transmissionState == "success")
+        {
+            textViewPermissionAndServiceStatus.append(". Last Transmission successful!");
         }
     }
 

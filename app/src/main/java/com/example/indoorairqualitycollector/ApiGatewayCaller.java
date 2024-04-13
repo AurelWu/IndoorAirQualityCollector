@@ -1,18 +1,33 @@
 package com.example.indoorairqualitycollector;
 
-
+import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
-import java.io.IOException;
+import android.widget.Toast;
 import okhttp3.*;
+
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 public class ApiGatewayCaller {
 
-    public static void sendJsonToApiGateway(String json) {
+    public static String successState;
+    public static MainActivity mainActivity;
+
+    // Modify sendJsonToApiGateway to accept callback
+    public static void sendJsonToApiGateway(String json, MainActivity m)
+    {
+        mainActivity = m;
+        successState = "";
         new NetworkTask().execute(json);
     }
 
     private static class NetworkTask extends AsyncTask<String, Void, Void> {
+
+
+
+        public NetworkTask() {;
+;
+        }
 
         @Override
         protected Void doInBackground(String... params) {
@@ -23,8 +38,13 @@ public class ApiGatewayCaller {
                 MediaType JSON = MediaType.parse("application/json; charset=utf-8");
                 RequestBody requestBody = RequestBody.create(JSON, json);
 
-                // Create OkHttpClient instance
-                OkHttpClient client = new OkHttpClient();
+                OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder();
+
+                clientBuilder.readTimeout(20, TimeUnit.SECONDS);
+                clientBuilder.connectTimeout(20, TimeUnit.SECONDS);
+                clientBuilder.writeTimeout(20, TimeUnit.SECONDS);
+
+                OkHttpClient client = clientBuilder.build();
 
                 // Create POST request
                 Request request = new Request.Builder()
@@ -35,19 +55,18 @@ public class ApiGatewayCaller {
                 // Execute request
                 Response response = client.newCall(request).execute();
 
+                // Get response code
+                int responseCode = response.code();
+
                 // Handle response
                 if (response.isSuccessful()) {
-                    String responseBody = response.body().string();
-                    // Handle successful response
-                    Log.d("sendJsonToApiGateway", "Response: " + responseBody);
-                    System.out.println("Response: " + responseBody);
-                } else {
-                    // Handle unsuccessful response
-                    Log.d("sendJsonToApiGateway", "Error: " + response.code() + " " + response.message());
-                    System.out.println("Error: " + response.code() + " " + response.message());
+                    successState = "success";
+                }
+                else
+                {
+                    successState = "failure";
                 }
 
-                // Close response
                 response.close();
 
             } catch (IOException e) {
@@ -59,8 +78,19 @@ public class ApiGatewayCaller {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            // This method is executed on the main UI thread after doInBackground() completes
-            // You can update UI or perform any post-processing here
+            if(successState=="success")
+            {
+                mainActivity.OnTransmissionSuccess();
+            }
+            else if(successState=="failure")
+            {
+                mainActivity.OnTransmissionFail("Transmission failed, try again!");
+            }
+
+            else //no response?
+            {
+                mainActivity.OnTransmissionFail("No Response from server, try again!");
+            }
         }
     }
 }

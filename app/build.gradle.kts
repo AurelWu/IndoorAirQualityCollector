@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.indoorairqualitycollector"
+    namespace = "com.aurelwu.indoorairqualitycollector"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.indoorairqualitycollector"
+        applicationId = "com.aurelwu.indoorairqualitycollector"
         minSdk = 30
         targetSdk = 34
         versionCode = 1
@@ -38,7 +38,9 @@ dependencies {
     implementation(libs.activity)
     implementation(libs.constraintlayout)
     implementation(libs.okhttp)
+    implementation(libs.google.material)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+
 }

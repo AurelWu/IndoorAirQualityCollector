@@ -1,4 +1,4 @@
-package com.example.indoorairqualitycollector;
+package com.aurelwu.indoorairqualitycollector;
 
 import org.junit.Test;
 

@@ -1,4 +1,4 @@
-package com.example.indoorairqualitycollector;
+package com.aurelwu.indoorairqualitycollector;
 
 import static android.content.Context.LOCATION_SERVICE;
 
@@ -15,8 +15,6 @@ import android.provider.Settings;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
-
-import java.util.List;
 
 public class SpatialManager implements LocationListener {
     public MainActivity mainActivity;

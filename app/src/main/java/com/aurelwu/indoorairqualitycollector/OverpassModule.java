@@ -1,4 +1,4 @@
-package com.example.indoorairqualitycollector;
+package com.aurelwu.indoorairqualitycollector;
 
 import android.util.Log;
 
@@ -7,11 +7,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -38,16 +36,31 @@ public class OverpassModule
         //TODO: add remaining categories of amenities and maybe other
         return "[out:json];" +
                 "(" +
-                "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[shop];" + // Find nearby shops
-                "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=bar];" + // Find nearby amenities
+                "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[shop];" +
+                "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=bar];" +
+                "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=place_of_worship];" +
                 "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=pub];" +
-                "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=restaurant];" + // Find nearby amenities
-                "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=cafe];" + // Find nearby amenities
-                "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=fast_food];" + // Find nearby amenities
-                "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=food_court];" + // Find nearby amenities
-                "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=ice_cream];" + // Find nearby amenities
+                "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=restaurant];" +
+                "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=cafe];" +
+                "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=fast_food];" +
+                "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=food_court];" +
+                "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=ice_cream];" +
+                "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=college];" +
+                "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=dancing_school];" +
+                "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=driving_school];" +
+                "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=kindergarten];" +
+                "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=language_school];" +
+                "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=library];" +
+                "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=research_institute];" +
+                "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=music_school];" +
+                "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=school];" +
+                "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=university];" +
+                "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[tourism=museum];" +
+                "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[tourism=gallery];" +
+                "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[tourism=hotel];" +
                 ");" +
                 "out center qt;";
+        //TODO: Add hotel?
     }
 
     private void parseOverpassResponse(String response) {

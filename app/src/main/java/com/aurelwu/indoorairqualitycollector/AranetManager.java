@@ -1,6 +1,4 @@
-package com.example.indoorairqualitycollector;
-
-import static androidx.core.content.ContextCompat.getSystemService;
+package com.aurelwu.indoorairqualitycollector;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -16,12 +14,10 @@ import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanFilter;
 import android.bluetooth.le.ScanResult;
 import android.bluetooth.le.ScanSettings;
-import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.ParcelUuid;
-import android.os.PowerManager;
 import android.util.Log;
 
 import androidx.core.app.ActivityCompat;

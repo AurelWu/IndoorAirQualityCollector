@@ -1,8 +1,7 @@
-package com.example.indoorairqualitycollector;
+package com.aurelwu.indoorairqualitycollector;
 
-import android.content.Context;
 import android.os.AsyncTask;
-import android.widget.Toast;
+
 import okhttp3.*;
 
 import java.io.IOException;

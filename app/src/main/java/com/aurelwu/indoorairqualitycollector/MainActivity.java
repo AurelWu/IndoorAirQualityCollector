@@ -1,6 +1,7 @@
-package com.example.indoorairqualitycollector;
+package com.aurelwu.indoorairqualitycollector;
 
-import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -15,10 +16,10 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -62,6 +63,8 @@ public class MainActivity extends AppCompatActivity {
     RadioButton radioButton100mRange;
     RadioButton radioButton250mRange;
 
+
+
     RadioButton radioButtonOccupancyLow;
     RadioButton radioButtonOccupancyMedium;
     RadioButton radioButtonOccupancyHigh;
@@ -79,6 +82,9 @@ public class MainActivity extends AppCompatActivity {
 
     CheckBox checkBoxWindowsDoors;
     CheckBox checkBoxVentilationSystem;
+
+    Button buttonOpenMapInBrowser;
+    ConstraintLayout constraintLayoutMap;
 
     public boolean invalidateLocations = false;
 
@@ -99,12 +105,12 @@ public class MainActivity extends AppCompatActivity {
     //SEMI DONE (BUTTONS ARE THERE BUT SUBMITTING NOT DONE) TODO:     add Button to cancel recording and to submit recorded Data, both should have a confirmation
     //DONE TODO: Start recording button disable if no location selected;s
     //SEMIDONE: SEEMS TO WORK ANYWAYSTODO: => MAKE SURE IT RUNS IN BACKGROUND!!!!
-    //x TODO: Build JSON to SUBMIT
-    //x TODO: WEDNESDAY: Submit to S3 Cloud temporarily
+    //DONE TODO: Build JSON to SUBMIT
+    //OBSOLETE TODO: WEDNESDAY: Submit to S3 Cloud temporarily
     //  TODO: SANITIZE DATA IN LAMBDA (CHeck size in general, of array, length of strings)
-    //x TODO: Thursday: Create Database Tables and submit to that instead
-    //x TODO: Do some real Measurements
-    //x TODO: Friday+Weekend: Start working on the Map and create first prototype of Map
+    //DONE TODO: Thursday: Create Database Tables and submit to that instead
+    //DONE TODO: Do some real Measurements
+    //DONE TODO: Friday+Weekend: Start working on the Map and create first prototype of Map
     //TODO: => OUT OF SCOPE, ADD IN 2nd VERSION integrate Map into the App(?)
     //TODO: => OUT OF SCOPE, FIX IN 2nd VERSION: Scan Callback is called during scan again and again... not horrible, but not clean, fix if easily possible
     //TODO => OUT OF SCOPE, ADD IN 2nd VERSION (undefined, yes , no)
@@ -112,6 +118,16 @@ public class MainActivity extends AppCompatActivity {
     //TODO INSTEAD Just DO slider which can trim end (as thats the more important use case, if start is messed up you can just start again no biggie)
     //TODO IMPORTANT WHEN SENDING CHECK IF WE GET SUCESS FROM LAMBDA FUNCTION AND GIVE USER FEEDBACK THAT IT WAS SUCCESSFUL!
     //TODO: Fix name of NRW to NWR in DB...
+    //TODO: Map display Windows/Ventilation/Occupancy Status , display custom Notes
+    //DONE TODO: Handle how displayed when multiple Entries for 1 Location
+    //TODO: keep Lambda warm to test if that makes it quick (alternatively, dump JSON directly to S3 with all Data as long as it isn't that much regularily (and maybe in future make it so that we only display general info when zoomed out and only on lower zoom level we then download a JSON which only covers a small area and we generate those regularily?
+    //TODO: if first submission seems to fail but doesnt really fail we can get duplicate entries in DB => DB need check if entry already exists (same NodeID + same startdate)
+    //TODO: occupancy level might be buggy (especially if transmission first fails??
+    //TODO: display additional Data (open doors etc.) as icons with legend explaining it (display on each entry and also x of y total
+    //TODO: Option to make a Request for measurement
+    //TODO: Add option to include live data
+    //TODO: Website add filter option (just shops, restaurants, museums etc.)
+    //DONE TODO: add button to link to web page (opening in browser)
 
 
     private final Handler UIUpdater = new Handler();
@@ -157,6 +173,8 @@ public class MainActivity extends AppCompatActivity {
         radioButtonOccupancyMedium.setOnCheckedChangeListener(radioGroupListenerOccupancyLevels);
         radioButtonOccupancyHigh.setOnCheckedChangeListener(radioGroupListenerOccupancyLevels);
 
+        buttonOpenMapInBrowser = findViewById(R.id.buttonOpenMapInBrowser);
+        constraintLayoutMap = findViewById(R.id.ConstraintLayoutShowMap);
 
 
         layoutLocationSelection = findViewById(R.id.LinearLayoutLocationSelector);
@@ -211,6 +229,8 @@ public class MainActivity extends AppCompatActivity {
         layoutCheckboxes.setVisibility(View.VISIBLE);
         textInputLayoutCustomNotes.setVisibility(View.VISIBLE);
         layoutOccupancy.setVisibility(View.VISIBLE);
+        buttonOpenMapInBrowser.setVisibility(View.GONE);
+        constraintLayoutMap.setVisibility(View.GONE);
 
 
         logic.StartNewRecording(selectedLocation.ID,selectedLocation.Name,selectedLocation.latitude,selectedLocation.longitude,System.currentTimeMillis());
@@ -267,11 +287,20 @@ public class MainActivity extends AppCompatActivity {
         layoutSearchRangeSelection.setVisibility(View.VISIBLE);
         layoutLocationSelection.setVisibility(View.VISIBLE);
         buttonUpdateNearByLocations.setVisibility(View.VISIBLE);
+        buttonOpenMapInBrowser.setVisibility(View.VISIBLE);
+        constraintLayoutMap.setVisibility(View.VISIBLE);
         chartContainer.setVisibility(View.GONE);
         lineChartView.setVisibility(View.GONE);
         layoutCheckboxes.setVisibility(View.GONE);
         textInputLayoutCustomNotes.setVisibility(View.GONE);
         layoutOccupancy.setVisibility(View.GONE);
+        textInputEditTextCustomNotes.setText("");
+        radioButtonOccupancyLow.setChecked(false);
+        radioButtonOccupancyMedium.setChecked(false);
+        radioButtonOccupancyHigh.setChecked(false);
+
+        checkBoxWindowsDoors.setChecked(false);
+        checkBoxVentilationSystem.setChecked(false);
     }
 
 
@@ -491,7 +520,7 @@ public class MainActivity extends AppCompatActivity {
             long timeDifference = System.currentTimeMillis()-lastTimestamp;
 
             long timeDifferenceLocation = System.currentTimeMillis()-lastLocationUpdateTimer;
-            if(timeDifferenceLocation > 10000)
+            if(timeDifferenceLocation > 15000)
             {
                 logic.spatialManager.RequestLocationUpdate();
                 lastLocationUpdateTimer = System.currentTimeMillis();
@@ -556,4 +585,14 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     };
+
+    public void OnOpenMapInBrowser(View view)
+    {
+        String mapURL = "http://indoorco2map.s3-website.eu-central-1.amazonaws.com/";
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        // Set the data (URL) for the intent
+        intent.setData(Uri.parse(mapURL));
+        // Start the activity with the intent
+        startActivity(intent);
+    }
 }

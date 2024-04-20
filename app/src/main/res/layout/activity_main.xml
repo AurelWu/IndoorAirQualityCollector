@@ -10,7 +10,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="117dp">
 
         <LinearLayout
             android:id="@+id/LinearLayoutTitleBar"
@@ -40,47 +42,104 @@
             android:background="#77A6AC"
             android:orientation="horizontal">
 
-            <ImageButton
-                android:id="@+id/imageButtonGPS"
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_margin="8px"
+                android:layout_marginLeft="8px"
+                android:layout_marginTop="8px"
+                android:layout_marginRight="4px"
+                android:layout_marginBottom="8px"
                 android:layout_weight="1"
-                android:onClick="OnButtonClickGPS"
-                android:scaleX="1"
-                android:scaleY="1"
-                app:srcCompat="@drawable/icon_gps" />
+                android:background="#000000">
 
-            <ImageButton
-                android:id="@+id/buttonLocationPermissionStatus"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:onClick="OnButtonClickLocationPermission"
-                app:srcCompat="@drawable/icon_location" />
+                <ImageButton
+                    android:id="@+id/imageButtonGPS"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:onClick="OnButtonClickGPS"
+                    android:scaleX="1"
+                    android:scaleY="1"
+                    app:srcCompat="@drawable/icon_gps" />
+            </FrameLayout>
 
-            <ImageButton
-                android:id="@+id/buttonBluetoothStatus"
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:onClick="OnButtonClickBluetooth"
-                app:srcCompat="@android:drawable/stat_sys_data_bluetooth" />
+                android:layout_margin="8px"
+                android:layout_marginVertical="8px"
+                android:layout_marginLeft="4px"
+                android:layout_marginTop="8px"
+                android:layout_marginRight="4px"
+                android:layout_marginBottom="8px"
+                android:layout_weight="1">
 
-            <ImageButton
-                android:id="@+id/buttonBluetoothScanPermission"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:onClick="OnButtonBTScanPermission"
-                app:srcCompat="@android:drawable/stat_sys_data_bluetooth" />
+                <ImageButton
+                    android:id="@+id/buttonLocationPermissionStatus"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:onClick="OnButtonClickLocationPermission"
+                    app:srcCompat="@drawable/icon_location" />
+            </FrameLayout>
 
-            <ImageButton
-                android:id="@+id/imageButtonBluetoothConnectPermission"
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:onClick="OnButtonBTConnectPermission"
-                app:srcCompat="@android:drawable/stat_sys_data_bluetooth" />
+                android:layout_margin="8px"
+                android:layout_marginLeft="4px"
+                android:layout_marginTop="8px"
+                android:layout_marginRight="4px"
+                android:layout_marginBottom="8px"
+                android:layout_weight="1">
+
+                <ImageButton
+                    android:id="@+id/buttonBluetoothStatus"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:onClick="OnButtonClickBluetooth"
+                    app:srcCompat="@android:drawable/stat_sys_data_bluetooth" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="8px"
+                android:layout_marginLeft="4px"
+                android:layout_marginTop="8px"
+                android:layout_marginRight="4px"
+                android:layout_marginBottom="8px"
+                android:layout_weight="1">
+
+                <ImageButton
+                    android:id="@+id/buttonBluetoothScanPermission"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:onClick="OnButtonBTScanPermission"
+                    app:srcCompat="@android:drawable/stat_sys_data_bluetooth" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="8px"
+                android:layout_marginLeft="4px"
+                android:layout_marginTop="8px"
+                android:layout_marginRight="8px"
+                android:layout_marginBottom="8px"
+                android:layout_weight="1">
+
+                <ImageButton
+                    android:id="@+id/imageButtonBluetoothConnectPermission"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:onClick="OnButtonBTConnectPermission"
+                    app:srcCompat="@android:drawable/stat_sys_data_bluetooth" />
+            </FrameLayout>
 
         </LinearLayout>
 
@@ -215,6 +274,29 @@
             android:text="Start Recording"
             android:textSize="24sp" />
 
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="30px" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/ConstraintLayoutShowMap"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="16px">
+
+            <Button
+                android:id="@+id/buttonOpenMapInBrowser"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="OnOpenMapInBrowser"
+                android:text="Open Map in Browser"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.84000003"
+                tools:layout_editor_absoluteX="16dp" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
         <LinearLayout
             android:id="@+id/linearLayoutEndRecording"
             android:layout_width="match_parent"
@@ -228,7 +310,14 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="4"
                 android:onClick="OnFinishAndSubmitRecording"
-                android:text="Submit Data" />
+                android:text="Submit Data"
+                android:visibility="visible" />
+
+            <Space
+                android:layout_width="0px"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="8px"
+                android:layout_weight=".2" />
 
             <Button
                 android:id="@+id/buttonAbort"
@@ -236,7 +325,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
                 android:onClick="OnCancelRecording"
-                android:text="Cancel" />
+                android:text="Cancel"
+                android:visibility="visible" />
         </LinearLayout>
 
         <LinearLayout
@@ -245,7 +335,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="horizontal"
-            android:visibility="gone" >
+            android:visibility="gone">
 
         </LinearLayout>
 

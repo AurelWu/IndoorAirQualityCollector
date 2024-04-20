@@ -1,11 +1,9 @@
-package com.example.indoorairqualitycollector;
+package com.aurelwu.indoorairqualitycollector;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
-
-import kotlin.NotImplementedError;
 
 public class SubmissionData
 {

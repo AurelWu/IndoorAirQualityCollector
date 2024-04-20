@@ -1,6 +1,4 @@
-package com.example.indoorairqualitycollector;
-
-import java.util.Arrays;
+package com.aurelwu.indoorairqualitycollector;
 
 public class Converter
 {

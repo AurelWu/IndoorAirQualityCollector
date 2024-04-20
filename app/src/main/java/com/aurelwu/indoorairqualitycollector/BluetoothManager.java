@@ -1,4 +1,4 @@
-package com.example.indoorairqualitycollector;
+package com.aurelwu.indoorairqualitycollector;
 
 import android.Manifest;
 import android.bluetooth.BluetoothAdapter;

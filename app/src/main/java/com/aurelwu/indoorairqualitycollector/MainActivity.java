@@ -84,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
     CheckBox checkBoxVentilationSystem;
 
     Button buttonOpenMapInBrowser;
+    Button buttonImpressumDataProtection; //links to webpage with this statemenet
     ConstraintLayout constraintLayoutMap;
 
     public boolean invalidateLocations = false;
@@ -128,7 +129,11 @@ public class MainActivity extends AppCompatActivity {
     //TODO: Add option to include live data
     //TODO: Website add filter option (just shops, restaurants, museums etc.)
     //DONE TODO: add button to link to web page (opening in browser)
-
+    //TODO: Marker blue => red so color blindness is less of an issue (maybe have alternative scheme with green-red optionally)
+    //TODO: Website add legend
+    //TODO: Website add description Texts
+    //TODO: in Karte CO2-Sensor eintragen zum verleihen (Angabe PLZ oder Stadt)
+    //TODO: Impressum/Datenschutz in App & Website
 
     private final Handler UIUpdater = new Handler();
 
@@ -230,6 +235,7 @@ public class MainActivity extends AppCompatActivity {
         textInputLayoutCustomNotes.setVisibility(View.VISIBLE);
         layoutOccupancy.setVisibility(View.VISIBLE);
         buttonOpenMapInBrowser.setVisibility(View.GONE);
+        buttonImpressumDataProtection.setVisibility(View.GONE);
         constraintLayoutMap.setVisibility(View.GONE);
 
 
@@ -288,6 +294,7 @@ public class MainActivity extends AppCompatActivity {
         layoutLocationSelection.setVisibility(View.VISIBLE);
         buttonUpdateNearByLocations.setVisibility(View.VISIBLE);
         buttonOpenMapInBrowser.setVisibility(View.VISIBLE);
+        buttonImpressumDataProtection.setVisibility(View.VISIBLE);
         constraintLayoutMap.setVisibility(View.VISIBLE);
         chartContainer.setVisibility(View.GONE);
         lineChartView.setVisibility(View.GONE);
@@ -590,9 +597,15 @@ public class MainActivity extends AppCompatActivity {
     {
         String mapURL = "http://indoorco2map.s3-website.eu-central-1.amazonaws.com/";
         Intent intent = new Intent(Intent.ACTION_VIEW);
-        // Set the data (URL) for the intent
         intent.setData(Uri.parse(mapURL));
-        // Start the activity with the intent
+        startActivity(intent);
+    }
+
+    public void OnOpenImprint(View view)
+    {
+        String URL = "";
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse(URL));
         startActivity(intent);
     }
 }

@@ -5,6 +5,7 @@
     android:id="@+id/RadioButtonSearchRange250m"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:scaleX="1"
     tools:context=".MainActivity">
 
     <LinearLayout
@@ -30,7 +31,7 @@
                 android:autoSizeMinTextSize="12sp"
                 android:autoSizeTextType="uniform"
                 android:gravity="center_vertical"
-                android:text="Indoor Air Quality Data Collector"
+                android:text="Status Overview"
                 android:textAlignment="center" />
 
         </LinearLayout>
@@ -59,8 +60,8 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:onClick="OnButtonClickGPS"
-                    android:scaleX="1"
-                    android:scaleY="1"
+                    android:scaleX="2.5"
+                    android:scaleY="2.5"
                     app:srcCompat="@drawable/icon_gps" />
             </FrameLayout>
 
@@ -73,7 +74,8 @@
                 android:layout_marginTop="8px"
                 android:layout_marginRight="4px"
                 android:layout_marginBottom="8px"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:background="#000000">
 
                 <ImageButton
                     android:id="@+id/buttonLocationPermissionStatus"
@@ -81,6 +83,8 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:onClick="OnButtonClickLocationPermission"
+                    android:scaleX="2.5"
+                    android:scaleY="2.5"
                     app:srcCompat="@drawable/icon_location" />
             </FrameLayout>
 
@@ -92,7 +96,8 @@
                 android:layout_marginTop="8px"
                 android:layout_marginRight="4px"
                 android:layout_marginBottom="8px"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:background="#000000">
 
                 <ImageButton
                     android:id="@+id/buttonBluetoothStatus"
@@ -100,7 +105,9 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:onClick="OnButtonClickBluetooth"
-                    app:srcCompat="@android:drawable/stat_sys_data_bluetooth" />
+                    android:scaleX="2.5"
+                    android:scaleY="2.5"
+                    app:srcCompat="@drawable/icon_bt_status" />
             </FrameLayout>
 
             <FrameLayout
@@ -111,7 +118,8 @@
                 android:layout_marginTop="8px"
                 android:layout_marginRight="4px"
                 android:layout_marginBottom="8px"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:background="#000000">
 
                 <ImageButton
                     android:id="@+id/buttonBluetoothScanPermission"
@@ -119,7 +127,9 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:onClick="OnButtonBTScanPermission"
-                    app:srcCompat="@android:drawable/stat_sys_data_bluetooth" />
+                    android:scaleX="2.5"
+                    android:scaleY="2.5"
+                    app:srcCompat="@drawable/icon_bt_scan" />
             </FrameLayout>
 
             <FrameLayout
@@ -130,7 +140,8 @@
                 android:layout_marginTop="8px"
                 android:layout_marginRight="8px"
                 android:layout_marginBottom="8px"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:background="#000000">
 
                 <ImageButton
                     android:id="@+id/imageButtonBluetoothConnectPermission"
@@ -138,7 +149,9 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:onClick="OnButtonBTConnectPermission"
-                    app:srcCompat="@android:drawable/stat_sys_data_bluetooth" />
+                    android:scaleX="2.5"
+                    android:scaleY="2.5"
+                    app:srcCompat="@drawable/icon_bt_connect" />
             </FrameLayout>
 
         </LinearLayout>
@@ -289,12 +302,21 @@
                 android:id="@+id/buttonOpenMapInBrowser"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="32dp"
                 android:onClick="OnOpenMapInBrowser"
                 android:text="Open Map in Browser"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.84000003"
                 tools:layout_editor_absoluteX="16dp" />
+
+            <Button
+                android:id="@+id/buttonImpressum"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="OnOpenImprint"
+                android:text="Imprint / Data Protection Statement"
+                app:layout_constraintBottom_toBottomOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <LinearLayout

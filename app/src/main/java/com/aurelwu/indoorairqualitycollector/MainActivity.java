@@ -134,6 +134,7 @@ public class MainActivity extends AppCompatActivity {
     //TODO: Website add description Texts
     //TODO: in Karte CO2-Sensor eintragen zum verleihen (Angabe PLZ oder Stadt)
     //TODO: Impressum/Datenschutz in App & Website
+    //Use Simple Query Server as Intermediate Step
 
     private final Handler UIUpdater = new Handler();
 
@@ -179,6 +180,7 @@ public class MainActivity extends AppCompatActivity {
         radioButtonOccupancyHigh.setOnCheckedChangeListener(radioGroupListenerOccupancyLevels);
 
         buttonOpenMapInBrowser = findViewById(R.id.buttonOpenMapInBrowser);
+        buttonImpressumDataProtection = findViewById(R.id.buttonImpressum);
         constraintLayoutMap = findViewById(R.id.ConstraintLayoutShowMap);
 
 
@@ -206,7 +208,7 @@ public class MainActivity extends AppCompatActivity {
         locationSpinner = findViewById(R.id.spinnerSelectLocation);
 
 
-        UIUpdater.postDelayed(Update, 1000);
+        UIUpdater.postDelayed(Update, 2000);
 
         logic.spatialManager.searchRadius = searchRadius;
     }
@@ -338,7 +340,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void OnButtonClickLocationPermission(View view) 
     {
-        logic.spatialManager.RequestLocationPermissions(345,true);
+        logic.spatialManager.RequestLocationPermissions();
     }
 
     public void OnButtonBTScanPermission(View view)
@@ -354,7 +356,7 @@ public class MainActivity extends AppCompatActivity {
     private void UpdateUIElements()
     {
         UpdateLocationSelectionSpinner();
-        GPSEnabled = logic.spatialManager.IsGPSEnabled();
+        GPSEnabled = logic.spatialManager.isGPSEnabled();
         bluetoothEnabled = logic.bluetoothManager.IsBluetoothEnabled();
         locationPermission = logic.spatialManager.CheckLocationPermissions();
         bluetoothScanPermission = logic.bluetoothManager.CheckBluetoothScanPermissions();
@@ -529,7 +531,7 @@ public class MainActivity extends AppCompatActivity {
             long timeDifferenceLocation = System.currentTimeMillis()-lastLocationUpdateTimer;
             if(timeDifferenceLocation > 15000)
             {
-                logic.spatialManager.RequestLocationUpdate();
+                logic.spatialManager.requestLocationUpdates();
                 lastLocationUpdateTimer = System.currentTimeMillis();
             }
 

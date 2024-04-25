@@ -30,6 +30,8 @@ import java.util.UUID;
 public class AranetManager {
     private MainActivity mainActivity;
     private BluetoothManager bluetoothManager;
+
+    private BluetoothLeScanner bluetoothLeScanner;
     private static final UUID ARANET_SERVICE_UUID = UUID.fromString("0000FCE0-0000-1000-8000-00805f9b34fb");
     private static final UUID ARANET_CHARACTERISTIC_UUID = UUID.fromString("f0cd3001-95da-4f4b-9ac8-aa55d312af0c");
     public BluetoothDevice aranetDevice;
@@ -48,7 +50,6 @@ public class AranetManager {
     private BluetoothGatt bluetoothGatt;
 
 
-
     public AranetManager(BluetoothManager bluetoothManager, MainActivity mainActivity) {
         this.bluetoothManager = bluetoothManager;
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -56,15 +57,13 @@ public class AranetManager {
 
     }
 
-    public void StartNewRecording()
-    {
-        isRecording=true;
-        sensorData=new ArrayList<>();
+    public void StartNewRecording() {
+        isRecording = true;
+        sensorData = new ArrayList<>();
     }
 
-    public void FinishRecording()
-    {
-        isRecording=false;
+    public void FinishRecording() {
+        isRecording = false;
     }
 
     public void Update() {
@@ -78,21 +77,26 @@ public class AranetManager {
                 .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY) // Set scan mode
                 .build();
 
-        BluetoothLeScanner bluetoothLeScanner = bluetoothAdapter.getBluetoothLeScanner();
+        bluetoothLeScanner = bluetoothAdapter.getBluetoothLeScanner();
 
         if (ActivityCompat.checkSelfPermission(mainActivity, android.Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
         bluetoothLeScanner.startScan(Collections.singletonList(scanFilter), scanSettings, scanCallback);
-        new Handler(Looper.getMainLooper()).postDelayed(() -> bluetoothLeScanner.stopScan(scanCallback), 10000);
+        new Handler(Looper.getMainLooper()).postDelayed(() -> bluetoothLeScanner.stopScan(scanCallback), 15000);
     }
 
     private final ScanCallback scanCallback = new ScanCallback() {
         public void onScanResult(int callbackType, ScanResult result) {
 
-            Log.d("AranetManager", "Scancallback called");
+            //Log.d("AranetManager", "Scancallback called");
             BluetoothDevice device = result.getDevice();
+            Log.d("AranetManager", "Scancallback called | DeviceID: " + device.getAddress());
             if (device != null && foundDevice != true) {
+                if (ActivityCompat.checkSelfPermission(mainActivity, Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
+                    return;
+                }
+                bluetoothLeScanner.stopScan(this);
                 foundDevice = true;
                 aranetDevice = device;
                 aranetMAC = device.getAddress();

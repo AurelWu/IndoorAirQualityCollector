@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
     //DONE TODO: Do some real Measurements
     //DONE TODO: Friday+Weekend: Start working on the Map and create first prototype of Map
     //TODO: => OUT OF SCOPE, ADD IN 2nd VERSION integrate Map into the App(?)
-    //TODO: => OUT OF SCOPE, FIX IN 2nd VERSION: Scan Callback is called during scan again and again... not horrible, but not clean, fix if easily possible
+    //DONE TODO: => OUT OF SCOPE, FIX IN 2nd VERSION: Scan Callback is called during scan again and again... not horrible, but not clean, fix if easily possible
     //TODO => OUT OF SCOPE, ADD IN 2nd VERSION (undefined, yes , no)
     //TODO => OUT OF SCOPE, ADD IN 2nd VERSION     add two-sided trim-range slider,
     //TODO INSTEAD Just DO slider which can trim end (as thats the more important use case, if start is messed up you can just start again no biggie)
@@ -129,11 +129,12 @@ public class MainActivity extends AppCompatActivity {
     //TODO: Add option to include live data
     //TODO: Website add filter option (just shops, restaurants, museums etc.)
     //DONE TODO: add button to link to web page (opening in browser)
-    //TODO: Marker blue => red so color blindness is less of an issue (maybe have alternative scheme with green-red optionally)
+    //DONE (not DONE: optional green/red scheme) TODO: Marker blue => red so color blindness is less of an issue (maybe have alternative scheme with green-red optionally)
     //TODO: Website add legend
     //TODO: Website add description Texts
     //TODO: in Karte CO2-Sensor eintragen zum verleihen (Angabe PLZ oder Stadt)
     //TODO: Impressum/Datenschutz in App & Website
+    //TODO: Move to own Database
     //Use Simple Query Server as Intermediate Step
 
     private final Handler UIUpdater = new Handler();

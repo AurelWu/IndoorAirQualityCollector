@@ -16,7 +16,10 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.Priority;
+
 import android.location.LocationManager;
+import android.util.Log;
 
 public class SpatialManager {
 
@@ -44,13 +47,14 @@ public class SpatialManager {
 
     private void createLocationRequest() {
         locationRequest = LocationRequest.create();
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setPriority(Priority.PRIORITY_HIGH_ACCURACY);
     }
 
     private void createLocationCallback() {
         locationCallback = new LocationCallback() {
             @Override
             public void onLocationResult(LocationResult locationResult) {
+                Log.d("SpatialManager", "LocationCallback called");
                 if (locationResult == null) {
                     return;
                 }
@@ -64,9 +68,11 @@ public class SpatialManager {
     }
 
     public void requestLocationUpdates() {
+        Log.d("SpatialManager", "requestLocationUpdates called - pre check");
         if (ContextCompat.checkSelfPermission(mainActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
+        Log.d("SpatialManager", "requestLocationUpdates called - past check");
         fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null);
     }
 
@@ -75,8 +81,10 @@ public class SpatialManager {
     }
 
     private void updateLocation(Location location) {
+        Log.d("SpatialManager", "updateLocation Called: " + location.getLatitude() + " | " +location.getLongitude());
         myLatitude = location.getLatitude();
         myLongitude = location.getLongitude();
+        StopLocationUpdates();
     }
 
     public boolean isGPSEnabled() {

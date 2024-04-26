@@ -133,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
     //TODO: Website add legend
     //TODO: Website add description Texts
     //TODO: in Karte CO2-Sensor eintragen zum verleihen (Angabe PLZ oder Stadt)
-    //TODO: Impressum/Datenschutz in App & Website
+    //TODO: Impressum/Datenschutz in App & Website (semi done but doesnt link to existing page)
     //TODO: Move to own Database
     //Use Simple Query Server as Intermediate Step
 
@@ -445,6 +445,12 @@ public class MainActivity extends AppCompatActivity {
             {
                 textViewSensorStatus.setText("Device ID: " + logic.aranetManager.aranetMAC + "\r\nlast value: " + logic.aranetManager.currentReading.CO2ppm + "ppm. Update in " + timeToNextUpdate + " seconds");
             }
+
+            else if(logic.aranetManager.currentReading == null && logic.aranetManager.GattModeIsA2DP==true)
+            {
+                textViewSensorStatus.setText("Sensor found, but the required 'Smart Home Integration' is disabled.\r\n Please enable it using the official Aranet App");
+            }
+
             else if(logic.aranetManager.currentReading == null)
             {
                 textViewSensorStatus.setText("Waiting for first sensor update. This might take up to a Minute");

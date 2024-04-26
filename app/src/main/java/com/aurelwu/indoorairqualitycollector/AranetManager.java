@@ -42,6 +42,8 @@ public class AranetManager {
     private boolean foundDevice = false;
     public boolean isRecording = false;
 
+    public boolean GattModeIsA2DP = false;
+
 
     public List<SensorData> sensorData;
     public SensorData currentReading;
@@ -111,6 +113,7 @@ public class AranetManager {
     };
 
     public void connectToDevice() {
+        Log.d("AranetManager", "connectToDevice called");
         if (aranetDevice == null) return;
         if (ActivityCompat.checkSelfPermission(mainActivity, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
             return;
@@ -138,8 +141,11 @@ public class AranetManager {
             Log.d("onServicesDiscovered", "onServicesDiscovered called");
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 BluetoothGattService service = gatt.getService(ARANET_SERVICE_UUID);
+                Log.d("onServicesDiscovered", "service UUID: " + service.getUuid());
                 if (service != null) {
+                    List<BluetoothGattCharacteristic> x = service.getCharacteristics();
                     BluetoothGattCharacteristic characteristic = service.getCharacteristic(ARANET_CHARACTERISTIC_UUID);
+                    Log.d("onServicesDiscovered", "characteristic: " + characteristic.getUuid());
                     if (characteristic != null) {
                         if (ActivityCompat.checkSelfPermission(mainActivity, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
                             Log.d("onServicesDiscovered", "missing Permission");
@@ -156,11 +162,24 @@ public class AranetManager {
         public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status)
         {
             super.onCharacteristicRead(gatt, characteristic, status);
+            Log.d("onCharacteristicRead", "onCharacteristicRead called");
+            Log.d("onCharacteristicRead", "status: " + status);
             //Log.d("onCharacteristicRead", "onCharacteristicRead called");
             //Log.d("nCharacteristicRead/Gatt_status", "status: " + status);
+
+            if(status == BluetoothGatt.A2DP)
+            {
+                GattModeIsA2DP=true;
+            }
+            else
+            {
+                GattModeIsA2DP=false;
+            }
+
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 //Log.d("onCharacteristicRead", "now reading data");
                 byte[] data = characteristic.getValue();
+
                 if (data != null && data.length >= 10) {
                     // Convert byte array to desired values
                     int valueCO2 = (data[1] << 8) | (data[0] & 0xFF);

@@ -113,11 +113,11 @@ public class MainActivity extends AppCompatActivity {
     //DONE TODO: Do some real Measurements
     //DONE TODO: Friday+Weekend: Start working on the Map and create first prototype of Map
     //TODO: => OUT OF SCOPE, ADD IN 2nd VERSION integrate Map into the App(?)
-    //DONE TODO: => OUT OF SCOPE, FIX IN 2nd VERSION: Scan Callback is called during scan again and again... not horrible, but not clean, fix if easily possible
+    //DONE TODO: =>  FIX IN 2nd VERSION: Scan Callback is called during scan again and again... not horrible, but not clean, fix if easily possible
     //TODO => OUT OF SCOPE, ADD IN 2nd VERSION (undefined, yes , no)
     //TODO => OUT OF SCOPE, ADD IN 2nd VERSION     add two-sided trim-range slider,
     //TODO INSTEAD Just DO slider which can trim end (as thats the more important use case, if start is messed up you can just start again no biggie)
-    //TODO IMPORTANT WHEN SENDING CHECK IF WE GET SUCESS FROM LAMBDA FUNCTION AND GIVE USER FEEDBACK THAT IT WAS SUCCESSFUL!
+    //DONE: TODO IMPORTANT WHEN SENDING CHECK IF WE GET SUCESS FROM LAMBDA FUNCTION AND GIVE USER FEEDBACK THAT IT WAS SUCCESSFUL!
     //TODO: Fix name of NRW to NWR in DB...
     //TODO: Map display Windows/Ventilation/Occupancy Status , display custom Notes
     //DONE TODO: Handle how displayed when multiple Entries for 1 Location
@@ -130,12 +130,15 @@ public class MainActivity extends AppCompatActivity {
     //TODO: Website add filter option (just shops, restaurants, museums etc.)
     //DONE TODO: add button to link to web page (opening in browser)
     //DONE (not DONE: optional green/red scheme) TODO: Marker blue => red so color blindness is less of an issue (maybe have alternative scheme with green-red optionally)
-    //TODO: Website add legend
+    //DONE TODO: Website add legend
     //TODO: Website add description Texts
     //TODO: in Karte CO2-Sensor eintragen zum verleihen (Angabe PLZ oder Stadt)
     //TODO: Impressum/Datenschutz in App & Website (semi done but doesnt link to existing page)
     //TODO: Move to own Database
-    //Use Simple Query Server as Intermediate Step
+    //TODO: add confirm for cancel button
+    //TODO: change text of submit button to "submitting" during submission
+    //DONE TODO: add DatabaseTables which grabs info about the locations from overpass (shop, supermarket, restaurant etc.)
+    //DONE: Use Simple Query Server as Intermediate Step
 
     private final Handler UIUpdater = new Handler();
 
@@ -242,7 +245,7 @@ public class MainActivity extends AppCompatActivity {
         constraintLayoutMap.setVisibility(View.GONE);
 
 
-        logic.StartNewRecording(selectedLocation.ID,selectedLocation.Name,selectedLocation.latitude,selectedLocation.longitude,System.currentTimeMillis());
+        logic.StartNewRecording(selectedLocation.ID,selectedLocation.type, selectedLocation.Name,selectedLocation.latitude,selectedLocation.longitude,System.currentTimeMillis());
         checkBoxVentilationSystem.setChecked(false);
         checkBoxWindowsDoors.setChecked(false);
         occupancyLevel = "undefined";

@@ -47,7 +47,9 @@ public class ApiGatewayCaller {
 
                 // Create POST request
                 Request request = new Request.Builder()
-                        .url("https://wzugdkxj15.execute-api.eu-central-1.amazonaws.com/Standard/CO2")
+                        //.url("https://06hnj7diuj.execute-api.eu-central-1.amazonaws.com/Standard/ProcessCO2Data")
+                            .url("https://wzugdkxj15.execute-api.eu-central-1.amazonaws.com/Standard/CO2")
+                        //.url("https://sqs.eu-central-1.amazonaws.com/142160159144/co2measuredata")
                         .post(requestBody)
                         .build();
 

@@ -8,6 +8,8 @@ import java.util.List;
 public class SubmissionData
 {
     public String sensorID;
+
+    public String nwrType;
     public long nwrID;
     public String nwrName;
     public double nwrLatitude;
@@ -19,8 +21,9 @@ public class SubmissionData
     public String OccupancyLevel;
     public String AdditionalNotes;
 
-    public SubmissionData(String sensorID, long nwrID, String nwrName, double nwrLat, double nwrLon, long startTime)
+    public SubmissionData(String sensorID, String nwrType, long nwrID, String nwrName, double nwrLat, double nwrLon, long startTime)
     {
+        this.nwrType = nwrType;
         this.sensorID = sensorID;
         this.nwrID = nwrID;
         this.nwrName= nwrName;
@@ -44,6 +47,7 @@ public class SubmissionData
 
         try {
             json.put("d", sensorID);
+            json.put("p",nwrType);
             json.put("i", nwrID);
             json.put("n", nwrName);
             json.put("b", startTime);

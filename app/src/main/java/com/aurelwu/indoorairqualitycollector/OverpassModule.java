@@ -70,6 +70,7 @@ public class OverpassModule
 //
             for (int i = 0; i < elements.length(); i++) {
                 JSONObject element = elements.getJSONObject(i);
+                String type = element.getString("type");
                 long id = element.getLong("id");
                 JSONObject center = element.optJSONObject("center");
                 double lon = 0;
@@ -88,7 +89,7 @@ public class OverpassModule
 
                 JSONObject tags = element.getJSONObject("tags");
                 String name = tags.optString("name", ""); // Use optString to handle missing or null values
-                LocationData bd = new LocationData(id,name,lat,lon, spatialManager.myLatitude, spatialManager.myLongitude);
+                LocationData bd = new LocationData(type,id,name,lat,lon, spatialManager.myLatitude, spatialManager.myLongitude);
                 locationData.add(bd);
             }
         } catch (JSONException e) {

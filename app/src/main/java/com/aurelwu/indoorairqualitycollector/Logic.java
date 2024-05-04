@@ -16,9 +16,9 @@ public class Logic {
         aranetManager = new AranetManager(bluetoothManager,mainActivity);
     }
 
-    public void StartNewRecording(long nwrID, String nwrName, double nwrLat, double nwrLon, long startTime)
+    public void StartNewRecording(long nwrID,String nwrType, String nwrName, double nwrLat, double nwrLon, long startTime)
     {
-        submissionData = new SubmissionData(UserIDManager.GetEncryptedID(spatialManager.mainActivity, aranetManager.aranetMAC.toString()), nwrID,nwrName,nwrLat,nwrLon,startTime);
+        submissionData = new SubmissionData(UserIDManager.GetEncryptedID(spatialManager.mainActivity, aranetManager.aranetMAC.toString()),nwrType, nwrID,nwrName,nwrLat,nwrLon,startTime);
         aranetManager.StartNewRecording(); //we dont' provide full submissionData to aranetManager and rather collect its Data once FinishRecording is called from here
 
     }

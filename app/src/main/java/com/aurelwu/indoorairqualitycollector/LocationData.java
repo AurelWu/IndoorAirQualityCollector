@@ -1,6 +1,8 @@
 package com.aurelwu.indoorairqualitycollector;
 
 public class LocationData {
+
+    public String type;
     public long ID;
     public String Name;
     public double latitude;
@@ -8,8 +10,9 @@ public class LocationData {
 
     public double distanceToGivenLocation;
 
-    public LocationData(long ID, String Name, double latitude, double longitude, double myLatitude, double myLongitude)
+    public LocationData(String type, long ID, String Name, double latitude, double longitude, double myLatitude, double myLongitude)
     {
+        this.type = type;
         this.ID=ID;
         this.Name =Name;
         this.latitude =latitude;

@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
     //DONE TODO: Thursday: Create Database Tables and submit to that instead
     //DONE TODO: Do some real Measurements
     //DONE TODO: Friday+Weekend: Start working on the Map and create first prototype of Map
-    //TODO: => OUT OF SCOPE, ADD IN 2nd VERSION integrate Map into the App(?)
+    //SEMI DONE: links to browser Map now TODO: => OUT OF SCOPE, ADD IN 2nd VERSION integrate Map into the App(?)
     //DONE TODO: =>  FIX IN 2nd VERSION: Scan Callback is called during scan again and again... not horrible, but not clean, fix if easily possible
     //TODO => OUT OF SCOPE, ADD IN 2nd VERSION (undefined, yes , no)
     //TODO => OUT OF SCOPE, ADD IN 2nd VERSION     add two-sided trim-range slider,
@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
     //TODO: Map display Windows/Ventilation/Occupancy Status , display custom Notes
     //DONE TODO: Handle how displayed when multiple Entries for 1 Location
     //TODO: keep Lambda warm to test if that makes it quick (alternatively, dump JSON directly to S3 with all Data as long as it isn't that much regularily (and maybe in future make it so that we only display general info when zoomed out and only on lower zoom level we then download a JSON which only covers a small area and we generate those regularily?
-    //TODO: if first submission seems to fail but doesnt really fail we can get duplicate entries in DB => DB need check if entry already exists (same NodeID + same startdate)
+    //DONE (Using a constraint)TODO: if first submission seems to fail but doesnt really fail we can get duplicate entries in DB => DB need check if entry already exists (same NodeID + same startdate)
     //TODO: occupancy level might be buggy (especially if transmission first fails??
     //TODO: display additional Data (open doors etc.) as icons with legend explaining it (display on each entry and also x of y total
     //TODO: Option to make a Request for measurement
@@ -137,8 +137,9 @@ public class MainActivity extends AppCompatActivity {
     //TODO: Move to own Database
     //TODO: add confirm for cancel button
     //TODO: change text of submit button to "submitting" during submission
-    //DONE TODO: add DatabaseTables which grabs info about the locations from overpass (shop, supermarket, restaurant etc.)
+    //DONE BUT!! => Lambda still needs to be called automaticallyy!!! TODO: add DatabaseTables which grabs info about the locations from overpass (shop, supermarket, restaurant etc.)
     //DONE: Use Simple Query Server as Intermediate Step
+
 
     private final Handler UIUpdater = new Handler();
 

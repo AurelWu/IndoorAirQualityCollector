@@ -80,6 +80,9 @@ public class MainActivity extends AppCompatActivity {
     LinearLayout chartContainer;
     LineChartView lineChartView;
 
+    LinearLayout chartRangeSliderContainer;
+    IntegerRangeSlider chartRangeSlider;
+
     CheckBox checkBoxWindowsDoors;
     CheckBox checkBoxVentilationSystem;
 
@@ -126,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
     //TODO: occupancy level might be buggy (especially if transmission first fails??
     //TODO: display additional Data (open doors etc.) as icons with legend explaining it (display on each entry and also x of y total
     //TODO: Option to make a Request for measurement
-    //TODO: Add option to include live data
+    //DONE: Add option to include live data
     //TODO: Website add filter option (just shops, restaurants, museums etc.)
     //DONE TODO: add button to link to web page (opening in browser)
     //DONE (not DONE: optional green/red scheme) TODO: Marker blue => red so color blindness is less of an issue (maybe have alternative scheme with green-red optionally)
@@ -139,6 +142,17 @@ public class MainActivity extends AppCompatActivity {
     //TODO: change text of submit button to "submitting" during submission
     //DONE BUT!! => Lambda still needs to be called automaticallyy!!! TODO: add DatabaseTables which grabs info about the locations from overpass (shop, supermarket, restaurant etc.)
     //DONE: Use Simple Query Server as Intermediate Step
+    //TODO: use SQS also as intermediate Step for Live Data
+    //DONE & FIXED TODO: apparently chart only shows as many entries as 1st measurement for a location was long even if later are longer, check the code and FIX
+    //TODO: IF NO GPS RESULTS IN RANGE ; THEN DISPLAY THAT NOTHING WAS IN RANGE (SO PEOPLE KNOW IT WORKS)
+    //TODO: APP might crash if BT is disabled? (CHristoph) => Inquire and FIX!
+    //TODO: When begin recording slider values for IntegerRangeSlider must be reset to defaults!
+    //TODO: Update Submit Button state as soon as the the range slider value is changed
+    //TODO: Apparently SQS response is slow if DB is not fast ? Maybe Setup of Pipeline wrong?
+    //TODO: Add a small margin left and right for all elements (as some people have protection covers which obstruct a tiny bit of the screen
+    //Fix Layout a bit (display Geolocation in 1 Line ?)
+    //Autosize Button Text so not on 2 lines on smaller displays)
+    //TODO: add other Sensors (maybe add
 
 
     private final Handler UIUpdater = new Handler();
@@ -196,6 +210,12 @@ public class MainActivity extends AppCompatActivity {
         lineChartView = new LineChartView(this);
         chartContainer.addView(lineChartView);
 
+        chartRangeSliderContainer = findViewById(R.id.LinearLayoutChartRangeSliderContainer);
+        chartRangeSlider = new IntegerRangeSlider(this);
+        chartRangeSliderContainer.addView(chartRangeSlider);
+        chartRangeSlider.setMin(0);
+        chartRangeSlider.setMax(10);
+
         layoutCheckboxes = findViewById(R.id.LinearLayoutCheckboxes);
         checkBoxWindowsDoors = findViewById(R.id.checkBoxWindowsDoors);
         checkBoxVentilationSystem = findViewById(R.id.checkBoxVentilationSystem);
@@ -236,6 +256,7 @@ public class MainActivity extends AppCompatActivity {
         buttonStartRecording.setVisibility(View.GONE);
         buttonUpdateNearByLocations.setVisibility(View.GONE);
         chartContainer.setVisibility(View.VISIBLE);
+        chartRangeSliderContainer.setVisibility(View.VISIBLE);
         lineChartView.setVisibility(View.VISIBLE);
         lineChartView.invalidate();
         layoutCheckboxes.setVisibility(View.VISIBLE);
@@ -244,7 +265,7 @@ public class MainActivity extends AppCompatActivity {
         buttonOpenMapInBrowser.setVisibility(View.GONE);
         buttonImpressumDataProtection.setVisibility(View.GONE);
         constraintLayoutMap.setVisibility(View.GONE);
-
+        chartRangeSlider.ReInit();
 
         logic.StartNewRecording(selectedLocation.ID,selectedLocation.type, selectedLocation.Name,selectedLocation.latitude,selectedLocation.longitude,System.currentTimeMillis());
         checkBoxVentilationSystem.setChecked(false);
@@ -256,9 +277,11 @@ public class MainActivity extends AppCompatActivity {
     public void OnFinishAndSubmitRecording(View view)
     {
         logic.FinishRecording(checkBoxWindowsDoors.isChecked(),checkBoxVentilationSystem.isChecked(),occupancyLevel,textInputEditTextCustomNotes.getText().toString());
-        String json = logic.GenerateJSONToTransmit();
+        chartRangeSlider.getMinValue();
+        String json = logic.GenerateJSONToTransmit(chartRangeSlider.getMinValue(),chartRangeSlider.getMaxValue());
         transmissionState = "none";
         buttonFinishRecording.setEnabled(false);
+        buttonFinishRecording.setText(("Submitting"));
         ApiGatewayCaller.sendJsonToApiGateway(json,this);
     }
 
@@ -304,6 +327,7 @@ public class MainActivity extends AppCompatActivity {
         buttonImpressumDataProtection.setVisibility(View.VISIBLE);
         constraintLayoutMap.setVisibility(View.VISIBLE);
         chartContainer.setVisibility(View.GONE);
+        chartRangeSliderContainer.setVisibility(View.GONE);
         lineChartView.setVisibility(View.GONE);
         layoutCheckboxes.setVisibility(View.GONE);
         textInputLayoutCustomNotes.setVisibility(View.GONE);
@@ -487,7 +511,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else
                 {
-                    textViewLocationStatus.setText("Current Location:\r\nLat: " + String.format("%.6f", logic.spatialManager.myLatitude) + "\r\nLon: " + String.format("%.6f", logic.spatialManager.myLongitude));
+                    textViewLocationStatus.setText("Current Location:\r\nLat: " + String.format("%.6f", logic.spatialManager.myLatitude) + " | Lon: " + String.format("%.6f", logic.spatialManager.myLongitude));
                 }
                 buttonUpdateNearByLocations.setEnabled(true);
             }
@@ -508,11 +532,11 @@ public class MainActivity extends AppCompatActivity {
         if(logic.aranetManager.isRecording)
         {
             lineChartView.setData(logic.aranetManager.GetCO2Data());
-
-            if(logic.aranetManager.GetCO2Data().length<5)
+            chartRangeSlider.SetDataRange(logic.aranetManager.GetCO2Data().length);
+            if(logic.aranetManager.GetCO2Data().length<5 || (chartRangeSlider.getMaxValue()-chartRangeSlider.getMinValue() <4))
             {
                 buttonFinishRecording.setEnabled(false);
-                buttonFinishRecording.setText("Submit (available after 5 minutes)");
+                buttonFinishRecording.setText("Submit (needs 5 minutes of Data)");
             }
             else
             {
@@ -616,7 +640,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void OnOpenImprint(View view)
     {
-        String URL = "";
+        String URL = "https://www.bluestats.net/Datenschutz.html";
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(Uri.parse(URL));
         startActivity(intent);

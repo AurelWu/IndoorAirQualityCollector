@@ -362,6 +362,14 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/LinearLayoutChartRangeSliderContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:visibility="gone"></LinearLayout>
+
+        <LinearLayout
             android:id="@+id/LinearLayoutCheckboxes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -32,9 +32,9 @@ public class Logic {
         aranetManager.FinishRecording();
     }
 
-    public String GenerateJSONToTransmit()
+    public String GenerateJSONToTransmit(int RangeSliderMin, int RangeSliderMax)
     {
-        String jsonToSubmit = submissionData.toJson();
+        String jsonToSubmit = submissionData.toJson(RangeSliderMin,RangeSliderMax);
         return jsonToSubmit;
     }
 }

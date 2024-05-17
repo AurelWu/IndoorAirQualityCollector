@@ -187,7 +187,7 @@ public class AranetManager {
                     int valuePressure = (data[5] << 8) | (data[4] & 0xFF);
                     int valueHumidity = data[6] & 0xFF;
                     int valueUpdateInterval = (data[10] <<8) | (data[9]  & 0xFF);
-                    //TODO: IF UPDATEINTERVAL IS NOT 60 then demand user to change it to 60s! (or maybe we can also change it programmatically after asking user for permission?";
+                    //DONE TODO: IF UPDATEINTERVAL IS NOT 60 then demand user to change it to 60s! (or maybe we can also change it programmatically after asking user for permission?";
                     // Display values in TextView
                     UpdateInterval = valueUpdateInterval;
                     currentReading = new SensorData(valueCO2,0);

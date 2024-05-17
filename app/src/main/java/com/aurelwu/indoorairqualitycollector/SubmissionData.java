@@ -32,17 +32,25 @@ public class SubmissionData
         this.nwrLongitude = nwrLon;
     }
 
-    public String toJson() {
+    public String toJson(int RangeSliderMin, int RangeSliderMax) {
         //throw new NotImplementedError();
         JSONObject json = new JSONObject();
+        int arraySize = (RangeSliderMax-RangeSliderMin)+1;
+        String[] ppmArray = new String[arraySize];
+        String[] timestampArray = new String[arraySize];
 
-        String[] ppmArray = new String[sensorData.size()];
-        String[] timestampArray = new String[sensorData.size()];
+        if(RangeSliderMax+1 > sensorData.size())
+        {
+            throw new ArrayIndexOutOfBoundsException("RangeSliderMax +1 > SensorData Array - this should not happen");
+        }
 
-        for (int i = 0; i < sensorData.size(); i++) {
+        int arrayIndex = 0;
+        //TODO: use limits defined by RangeSlider
+        for (int i = RangeSliderMin; i < RangeSliderMax+1; i++) {
             SensorData data = sensorData.get(i);
-            ppmArray[i] = String.valueOf(data.CO2ppm);
-            timestampArray[i] = String.valueOf(data.timeStamp);
+            ppmArray[arrayIndex] = String.valueOf(data.CO2ppm);
+            timestampArray[arrayIndex] = String.valueOf(data.timeStamp);
+            arrayIndex++;
         }
 
         try {

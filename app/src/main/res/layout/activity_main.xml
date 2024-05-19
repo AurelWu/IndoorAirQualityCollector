@@ -19,6 +19,7 @@
             android:id="@+id/LinearLayoutTitleBar"
             android:layout_width="match_parent"
             android:layout_height="18pt"
+            android:layout_marginHorizontal="5px"
             android:background="#77A6AC"
             android:orientation="horizontal">
 
@@ -40,6 +41,7 @@
             android:id="@+id/LinearLayoutStatusButtons"
             android:layout_width="match_parent"
             android:layout_height="32pt"
+            android:layout_marginHorizontal="0px"
             android:background="#77A6AC"
             android:orientation="horizontal">
 
@@ -160,6 +162,7 @@
             android:id="@+id/LinearLayoutStatus"
             android:layout_width="match_parent"
             android:layout_height="24pt"
+            android:layout_marginHorizontal="10px"
             android:orientation="horizontal">
 
             <TextView
@@ -173,6 +176,7 @@
             android:id="@+id/LinearLayoutSensorStatus"
             android:layout_width="match_parent"
             android:layout_height="24pt"
+            android:layout_marginHorizontal="10px"
             android:orientation="horizontal">
 
             <TextView
@@ -189,6 +193,7 @@
             android:id="@+id/LinearLayoutLocationStatus"
             android:layout_width="match_parent"
             android:layout_height="24pt"
+            android:layout_marginHorizontal="10px"
             android:orientation="horizontal">
 
             <TextView
@@ -203,6 +208,7 @@
             android:id="@+id/LinearLayoutSearchRange"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10px"
             android:orientation="horizontal"
             android:paddingBottom="4dp">
 
@@ -260,6 +266,7 @@
             android:id="@+id/LinearLayoutLocationSelector"
             android:layout_width="match_parent"
             android:layout_height="70dp"
+            android:layout_marginHorizontal="10px"
             android:orientation="horizontal">
 
             <TextView
@@ -346,6 +353,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
+                android:maxLines="1"
+                app:autoSizeTextType="uniform"
                 android:onClick="OnCancelRecording"
                 android:text="Cancel"
                 android:visibility="visible" />
@@ -355,6 +364,7 @@
             android:id="@+id/LinearLayoutLineChartContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10px"
             android:layout_weight="1"
             android:orientation="horizontal"
             android:visibility="gone">
@@ -365,6 +375,7 @@
             android:id="@+id/LinearLayoutChartRangeSliderContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10px"
             android:layout_weight="1"
             android:orientation="horizontal"
             android:visibility="gone"></LinearLayout>

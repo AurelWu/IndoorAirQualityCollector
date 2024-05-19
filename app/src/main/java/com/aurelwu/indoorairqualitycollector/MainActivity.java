@@ -28,6 +28,9 @@ import androidx.core.view.WindowInsetsCompat;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class MainActivity extends AppCompatActivity {
 
     ImageButton buttonGPSStatus;
@@ -98,61 +101,62 @@ public class MainActivity extends AppCompatActivity {
 
     LocationData selectedLocation = null;
 
-    //DONE (no pairing required) TODO: Monday => Display Sensor ID and if no sensor paired then open pairing Dialog, mention that currently only Aranet is supported
-    //DONE TODO: Monday => Display current CO2-Value and Update Interval
+    //DONE (no pairing required) : Monday => Display Sensor ID and if no sensor paired then open pairing Dialog, mention that currently only Aranet is supported
+    //DONE : Monday => Display current CO2-Value and Update Interval
     //DONE (user needs to do it in official APP) TODO: Monday => Show error if Update Interval is not set to 1 Minute (and maybe even to change update value programmatically in this app, if not tell to use official app!)
-    //DONE TODO: Tuesday => Populate Location-Spinner and allow Selection & also allow to set different Ranges (50m, 100m, 250m)
+    //DONE : Tuesday => Populate Location-Spinner and allow Selection & also allow to set different Ranges (50m, 100m, 250m)
     //DONE BUT IN MAIN SCREEN WITH HIDING OTHER ELEMENTS TODO: Wednesday => Create Recording Screen (=> display time to next update, display chart,
-    //DONE TODO: add selection for occupancy and maybe
-    //DONE TODO:     2-3 checkboxes for open windows etc.,
-    //DONE TODO:     add Freeform text field for custom Notes of Submitter
-    //SEMI DONE (BUTTONS ARE THERE BUT SUBMITTING NOT DONE) TODO:     add Button to cancel recording and to submit recorded Data, both should have a confirmation
-    //DONE TODO: Start recording button disable if no location selected;s
+    //DONE : add selection for occupancy and maybe
+    //DONE :     2-3 checkboxes for open windows etc.,
+    //DONE :     add Freeform text field for custom Notes of Submitter
+    //DONE (BUTTONS ARE THERE BUT SUBMITTING NOT DONE) TODO:     add Button to cancel recording and to submit recorded Data, both should have a confirmation
+    //DONE : Start recording button disable if no location selected;s
     //SEMIDONE: SEEMS TO WORK ANYWAYSTODO: => MAKE SURE IT RUNS IN BACKGROUND!!!!
-    //DONE TODO: Build JSON to SUBMIT
-    //OBSOLETE TODO: WEDNESDAY: Submit to S3 Cloud temporarily
+    //DONE : Build JSON to SUBMIT
+    //OBSOLETE : WEDNESDAY: Submit to S3 Cloud temporarily
     //  TODO: SANITIZE DATA IN LAMBDA (CHeck size in general, of array, length of strings)
-    //DONE TODO: Thursday: Create Database Tables and submit to that instead
-    //DONE TODO: Do some real Measurements
-    //DONE TODO: Friday+Weekend: Start working on the Map and create first prototype of Map
+    //DONE : Thursday: Create Database Tables and submit to that instead
+    //DONE : Do some real Measurements
+    //DONE : Friday+Weekend: Start working on the Map and create first prototype of Map
     //SEMI DONE: links to browser Map now TODO: => OUT OF SCOPE, ADD IN 2nd VERSION integrate Map into the App(?)
-    //DONE TODO: =>  FIX IN 2nd VERSION: Scan Callback is called during scan again and again... not horrible, but not clean, fix if easily possible
+    //DONE : =>  FIX IN 2nd VERSION: Scan Callback is called during scan again and again... not horrible, but not clean, fix if easily possible
     //TODO => OUT OF SCOPE, ADD IN 2nd VERSION (undefined, yes , no)
-    //TODO => OUT OF SCOPE, ADD IN 2nd VERSION     add two-sided trim-range slider,
-    //TODO INSTEAD Just DO slider which can trim end (as thats the more important use case, if start is messed up you can just start again no biggie)
+    //DONE : =>      add two-sided trim-range slider,
     //DONE: TODO IMPORTANT WHEN SENDING CHECK IF WE GET SUCESS FROM LAMBDA FUNCTION AND GIVE USER FEEDBACK THAT IT WAS SUCCESSFUL!
-    //TODO: Fix name of NRW to NWR in DB...
+    //DONE  Fix name of NRW to NWR in DB...
     //TODO: Map display Windows/Ventilation/Occupancy Status , display custom Notes
-    //DONE TODO: Handle how displayed when multiple Entries for 1 Location
-    //TODO: keep Lambda warm to test if that makes it quick (alternatively, dump JSON directly to S3 with all Data as long as it isn't that much regularily (and maybe in future make it so that we only display general info when zoomed out and only on lower zoom level we then download a JSON which only covers a small area and we generate those regularily?
-    //DONE (Using a constraint)TODO: if first submission seems to fail but doesnt really fail we can get duplicate entries in DB => DB need check if entry already exists (same NodeID + same startdate)
+    //DONE : Handle how displayed when multiple Entries for 1 Location
+    //DONE TODO: keep Lambda warm to test if that makes it quick (alternatively, dump JSON directly to S3 with all Data as long as it isn't that much regularily (and maybe in future make it so that we only display general info when zoomed out and only on lower zoom level we then download a JSON which only covers a small area and we generate those regularily?
+    //DONE (Using a constraint) if first submission seems to fail but doesnt really fail we can get duplicate entries in DB => DB need check if entry already exists (same NodeID + same startdate)
     //TODO: occupancy level might be buggy (especially if transmission first fails??
     //TODO: display additional Data (open doors etc.) as icons with legend explaining it (display on each entry and also x of y total
     //TODO: Option to make a Request for measurement
     //DONE: Add option to include live data
-    //TODO: Website add filter option (just shops, restaurants, museums etc.)
-    //DONE TODO: add button to link to web page (opening in browser)
+    //DONE : add button to link to web page (opening in browser)
     //DONE (not DONE: optional green/red scheme) TODO: Marker blue => red so color blindness is less of an issue (maybe have alternative scheme with green-red optionally)
-    //DONE TODO: Website add legend
+    //DONE : Website add legend
     //TODO: Website add description Texts
     //TODO: in Karte CO2-Sensor eintragen zum verleihen (Angabe PLZ oder Stadt)
     //TODO: Impressum/Datenschutz in App & Website (semi done but doesnt link to existing page)
-    //TODO: Move to own Database
+    //DONE Move to own Database
     //TODO: add confirm for cancel button
-    //TODO: change text of submit button to "submitting" during submission
+    //DONE : change text of submit button to "submitting" during submission
     //DONE BUT!! => Lambda still needs to be called automaticallyy!!! TODO: add DatabaseTables which grabs info about the locations from overpass (shop, supermarket, restaurant etc.)
     //DONE: Use Simple Query Server as Intermediate Step
     //TODO: use SQS also as intermediate Step for Live Data
     //DONE & FIXED TODO: apparently chart only shows as many entries as 1st measurement for a location was long even if later are longer, check the code and FIX
-    //TODO: IF NO GPS RESULTS IN RANGE ; THEN DISPLAY THAT NOTHING WAS IN RANGE (SO PEOPLE KNOW IT WORKS)
+    //MAYBE DONE TODO: IF NO GPS RESULTS IN RANGE ; THEN DISPLAY THAT NOTHING WAS IN RANGE (SO PEOPLE KNOW IT WORKS)
     //TODO: APP might crash if BT is disabled? (CHristoph) => Inquire and FIX!
-    //TODO: When begin recording slider values for IntegerRangeSlider must be reset to defaults!
+    //DONE  When begin recording slider values for IntegerRangeSlider must be reset to defaults!
     //TODO: Update Submit Button state as soon as the the range slider value is changed
     //TODO: Apparently SQS response is slow if DB is not fast ? Maybe Setup of Pipeline wrong?
-    //TODO: Add a small margin left and right for all elements (as some people have protection covers which obstruct a tiny bit of the screen
-    //Fix Layout a bit (display Geolocation in 1 Line ?)
-    //Autosize Button Text so not on 2 lines on smaller displays)
-    //TODO: add other Sensors (maybe add
+    //DONE TODO: Add a small margin left and right for all elements (as some people have protection covers which obstruct a tiny bit of the screen
+    //DONE PARTLY Fix Layout a bit (display Geolocation in 1 Line ?) NEEDS TEsting
+    //DONE Autosize Button Text so not on 2 lines on smaller displays) (NEEDS TESTING)
+    //TODO: add other Sensors
+    //TODO: Fix background of linechart on some browsers (probably need set background color explicitly? (TRIED BUT DIDNT WORK??)
+    //DONE: Add Download Data button
+    //Done Website add filter option (just shops, restaurants, museums etc.) [For now "Shops" , "Dining & Drinking"  "Other",] (other = Museums, Churches etc.) [Maybe add public buildings]
 
 
     private final Handler UIUpdater = new Handler();
@@ -350,10 +354,19 @@ public class MainActivity extends AppCompatActivity {
 
     public void UpdateLocationSelectionSpinner()
     {
+        ArrayList<String> defaultMessageList = new ArrayList<>();
+        defaultMessageList.add("No Locations found, search again");
         if(!invalidateLocations) return;
         ArrayAdapter<LocationData> adapter = new LocationDataAdapter(this, logic.spatialManager.overpassModule.locationData);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         locationSpinner.setAdapter(adapter);
+        locationSpinner.setEnabled(true);
+        if(logic.spatialManager.overpassModule.locationData.isEmpty())
+        {
+            locationSpinner.setEnabled(false);
+            ArrayAdapter<String> emptyAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_dropdown_item,defaultMessageList);
+        }
+
         invalidateLocations=false;
     }
 

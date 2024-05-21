@@ -489,7 +489,7 @@ public class MainActivity extends AppCompatActivity {
 
             else if(logic.aranetManager.currentReading == null && logic.aranetManager.GattModeIsA2DP==true)
             {
-                textViewSensorStatus.setText("Sensor found, but the required 'Smart Home Integration' is disabled.\r\n Please enable it using the official Aranet App");
+                textViewSensorStatus.setText("Sensor found, but the required 'Smart Home Integration' is disabled.\r\n Please enable it using the official Aranet App (use the Gears Icon)");
             }
 
             else if(logic.aranetManager.currentReading == null)

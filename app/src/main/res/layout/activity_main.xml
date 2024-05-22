@@ -18,8 +18,8 @@
         <LinearLayout
             android:id="@+id/LinearLayoutTitleBar"
             android:layout_width="match_parent"
-            android:layout_height="18pt"
-            android:layout_marginHorizontal="5px"
+            android:layout_height="17pt"
+            android:layout_marginHorizontal="0px"
             android:background="#77A6AC"
             android:orientation="horizontal">
 
@@ -161,7 +161,7 @@
         <LinearLayout
             android:id="@+id/LinearLayoutStatus"
             android:layout_width="match_parent"
-            android:layout_height="24pt"
+            android:layout_height="22pt"
             android:layout_marginHorizontal="10px"
             android:orientation="horizontal">
 
@@ -175,7 +175,7 @@
         <LinearLayout
             android:id="@+id/LinearLayoutSensorStatus"
             android:layout_width="match_parent"
-            android:layout_height="24pt"
+            android:layout_height="22pt"
             android:layout_marginHorizontal="10px"
             android:orientation="horizontal">
 
@@ -192,7 +192,7 @@
         <LinearLayout
             android:id="@+id/LinearLayoutLocationStatus"
             android:layout_width="match_parent"
-            android:layout_height="24pt"
+            android:layout_height="16pt"
             android:layout_marginHorizontal="10px"
             android:orientation="horizontal">
 

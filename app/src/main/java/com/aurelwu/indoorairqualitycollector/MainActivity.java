@@ -265,7 +265,8 @@ public class MainActivity extends AppCompatActivity {
         lineChartView.invalidate();
         layoutCheckboxes.setVisibility(View.VISIBLE);
         textInputLayoutCustomNotes.setVisibility(View.VISIBLE);
-        layoutOccupancy.setVisibility(View.VISIBLE);
+        //layoutOccupancy.setVisibility(View.VISIBLE);
+        layoutOccupancy.setVisibility(View.GONE); // For now we won't track this, its subjective anyways and less UI Elements = better
         buttonOpenMapInBrowser.setVisibility(View.GONE);
         buttonImpressumDataProtection.setVisibility(View.GONE);
         constraintLayoutMap.setVisibility(View.GONE);
@@ -520,7 +521,8 @@ public class MainActivity extends AppCompatActivity {
             {
                 if(logic.aranetManager.isRecording && selectedLocation!=null)
                 {
-                    textViewLocationStatus.setText("Recording data of Location: " + selectedLocation.Name+"\r\n"+ String.format("%.6f", selectedLocation.latitude) + " | " + String.format("%.6f", selectedLocation.longitude ));
+                    //textViewLocationStatus.setText("Recording data of Location: " + selectedLocation.Name+"\r\n"+ String.format("%.6f", selectedLocation.latitude) + " | " + String.format("%.6f", selectedLocation.longitude ));
+                    textViewLocationStatus.setText("Recording data of Location: " + selectedLocation.Name);
                 }
                 else
                 {
@@ -577,7 +579,7 @@ public class MainActivity extends AppCompatActivity {
             long timeDifference = System.currentTimeMillis()-lastTimestamp;
 
             long timeDifferenceLocation = System.currentTimeMillis()-lastLocationUpdateTimer;
-            if(timeDifferenceLocation > 15000)
+            if(timeDifferenceLocation > 10000)
             {
                 logic.spatialManager.requestLocationUpdates();
                 lastLocationUpdateTimer = System.currentTimeMillis();

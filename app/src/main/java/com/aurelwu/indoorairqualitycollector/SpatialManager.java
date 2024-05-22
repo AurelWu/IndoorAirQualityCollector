@@ -46,8 +46,13 @@ public class SpatialManager {
     }
 
     private void createLocationRequest() {
-        locationRequest = LocationRequest.create();
-        locationRequest.setPriority(Priority.PRIORITY_HIGH_ACCURACY);
+        int locationInterval = 10000;
+        locationRequest = new LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 5000)
+                .setWaitForAccurateLocation(false)
+                .setMinUpdateIntervalMillis(2500)
+                .setMaxUpdateDelayMillis(5000)
+                .build();
+
     }
 
     private void createLocationCallback() {

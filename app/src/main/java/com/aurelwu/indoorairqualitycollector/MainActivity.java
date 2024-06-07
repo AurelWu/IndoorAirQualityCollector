@@ -149,12 +149,13 @@ public class MainActivity extends AppCompatActivity {
     //TODO: APP might crash if BT is disabled? (CHristoph) => Inquire and FIX!
     //DONE  When begin recording slider values for IntegerRangeSlider must be reset to defaults!
     //TODO: Update Submit Button state as soon as the the range slider value is changed
-    //TODO: Apparently SQS response is slow if DB is not fast ? Maybe Setup of Pipeline wrong?
-    //DONE TODO: Add a small margin left and right for all elements (as some people have protection covers which obstruct a tiny bit of the screen
+    //DONE?: Apparently SQS response is slow if DB is not fast ? Maybe Setup of Pipeline wrong?
+    //DONE?  Add a small margin left and right for all elements (as some people have protection covers which obstruct a tiny bit of the screen
     //DONE PARTLY Fix Layout a bit (display Geolocation in 1 Line ?) NEEDS TEsting
     //DONE Autosize Button Text so not on 2 lines on smaller displays) (NEEDS TESTING)
     //TODO: add other Sensors
     //TODO: Fix background of linechart on some browsers (probably need set background color explicitly? (TRIED BUT DIDNT WORK??)
+    //TODO: Improve Linechart layout (especially legend) when many recordings of 1 place
     //DONE: Add Download Data button
     //Done Website add filter option (just shops, restaurants, museums etc.) [For now "Shops" , "Dining & Drinking"  "Other",] (other = Museums, Churches etc.) [Maybe add public buildings]
 

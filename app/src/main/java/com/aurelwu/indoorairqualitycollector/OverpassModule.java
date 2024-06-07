@@ -55,6 +55,10 @@ public class OverpassModule
                 "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=music_school];" +
                 "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=school];" +
                 "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=university];" +
+                "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=hospital];" +
+                "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=clinic];" +
+                "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=doctors];" +
+                "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[healthcare];" +
                 "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[tourism=museum];" +
                 "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[tourism=gallery];" +
                 "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[tourism=hotel];" +

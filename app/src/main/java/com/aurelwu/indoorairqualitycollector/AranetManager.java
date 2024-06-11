@@ -15,6 +15,7 @@ import android.bluetooth.le.ScanFilter;
 import android.bluetooth.le.ScanResult;
 import android.bluetooth.le.ScanSettings;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.ParcelUuid;
@@ -81,8 +82,16 @@ public class AranetManager {
 
         bluetoothLeScanner = bluetoothAdapter.getBluetoothLeScanner();
 
-        if (ActivityCompat.checkSelfPermission(mainActivity, android.Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
-            return;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            // Android 12 and above
+            if (ActivityCompat.checkSelfPermission(mainActivity, android.Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
+        } else {
+            // Android 11 and below
+            if (ActivityCompat.checkSelfPermission(mainActivity, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
         }
         bluetoothLeScanner.startScan(Collections.singletonList(scanFilter), scanSettings, scanCallback);
         new Handler(Looper.getMainLooper()).postDelayed(() -> bluetoothLeScanner.stopScan(scanCallback), 15000);
@@ -95,16 +104,29 @@ public class AranetManager {
             BluetoothDevice device = result.getDevice();
             Log.d("AranetManager", "Scancallback called | DeviceID: " + device.getAddress());
             if (device != null && foundDevice != true) {
-                if (ActivityCompat.checkSelfPermission(mainActivity, Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
-                    return;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    // Android 12 and above
+                    if (ActivityCompat.checkSelfPermission(mainActivity, android.Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
+                        return;
+                    }
+                } else {
+                    // Android 11 and below
+                    if (ActivityCompat.checkSelfPermission(mainActivity, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        return;
+                    }
                 }
                 bluetoothLeScanner.stopScan(this);
                 foundDevice = true;
                 aranetDevice = device;
                 aranetMAC = device.getAddress();
-                if (ActivityCompat.checkSelfPermission(mainActivity, android.Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED)
-                {
-                    return;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    // Android 12 and above
+                    if (ActivityCompat.checkSelfPermission(mainActivity, android.Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+                        return;
+                    }
+                } else {
+                    // Android 11 and below
+                    // No specific permission check required for Bluetooth connect
                 }
                 aranetDeviceName = device.getName();
                 connectToDevice();
@@ -115,8 +137,14 @@ public class AranetManager {
     public void connectToDevice() {
         Log.d("AranetManager", "connectToDevice called");
         if (aranetDevice == null) return;
-        if (ActivityCompat.checkSelfPermission(mainActivity, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
-            return;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            // Android 12 and above
+            if (ActivityCompat.checkSelfPermission(mainActivity, android.Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
+        } else {
+            // Android 11 and below
+            // No specific permission check required for Bluetooth connect
         }
         bluetoothGatt = aranetDevice.connectGatt(mainActivity, false, gattCallback);
     }
@@ -147,9 +175,14 @@ public class AranetManager {
                     BluetoothGattCharacteristic characteristic = service.getCharacteristic(ARANET_CHARACTERISTIC_UUID);
                     Log.d("onServicesDiscovered", "characteristic: " + characteristic.getUuid());
                     if (characteristic != null) {
-                        if (ActivityCompat.checkSelfPermission(mainActivity, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
-                            Log.d("onServicesDiscovered", "missing Permission");
-                            return;
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                            // Android 12 and above
+                            if (ActivityCompat.checkSelfPermission(mainActivity, android.Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+                                return;
+                            }
+                        } else {
+                            // Android 11 and below
+                            // No specific permission check required for Bluetooth connect
                         }
                         gatt.readCharacteristic(characteristic);
                     }
@@ -197,9 +230,14 @@ public class AranetManager {
                     }
                 }
             }
-            if (ActivityCompat.checkSelfPermission(mainActivity, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED)
-            {
-                return;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                // Android 12 and above
+                if (ActivityCompat.checkSelfPermission(mainActivity, android.Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+                    return;
+                }
+            } else {
+                // Android 11 and below
+                // No specific permission check required for Bluetooth connect
             }
             gatt.disconnect();
             gatt.close();

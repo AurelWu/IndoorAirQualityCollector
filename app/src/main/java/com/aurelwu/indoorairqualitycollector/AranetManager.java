@@ -39,11 +39,16 @@ public class AranetManager {
     public String aranetMAC;
     public String aranetDeviceName;
 
+    public int rssi = 0;
+    public int txPower = 0;
+
     public int UpdateInterval = 9999;
     private boolean foundDevice = false;
     public boolean isRecording = false;
 
     public boolean GattModeIsA2DP = false;
+
+    public String GattStatus = "-";
 
 
     public List<SensorData> sensorData;
@@ -102,8 +107,15 @@ public class AranetManager {
 
             //Log.d("AranetManager", "Scancallback called");
             BluetoothDevice device = result.getDevice();
+            rssi = result.getRssi();
+            txPower = result.getTxPower();
+            if(device == null && aranetDevice != null) //we didnt find it this time but we already had it before and use it again
+            {
+                device = aranetDevice;
+            }
             Log.d("AranetManager", "Scancallback called | DeviceID: " + device.getAddress());
-            if (device != null && foundDevice != true) {
+            if (device != null && foundDevice != true)
+            {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                     // Android 12 and above
                     if (ActivityCompat.checkSelfPermission(mainActivity, android.Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
@@ -146,6 +158,7 @@ public class AranetManager {
             // Android 11 and below
             // No specific permission check required for Bluetooth connect
         }
+
         bluetoothGatt = aranetDevice.connectGatt(mainActivity, false, gattCallback);
     }
 
@@ -166,6 +179,7 @@ public class AranetManager {
         @Override
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
             super.onServicesDiscovered(gatt, status);
+
             Log.d("onServicesDiscovered", "onServicesDiscovered called");
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 BluetoothGattService service = gatt.getService(ARANET_SERVICE_UUID);
@@ -199,7 +213,7 @@ public class AranetManager {
             Log.d("onCharacteristicRead", "status: " + status);
             //Log.d("onCharacteristicRead", "onCharacteristicRead called");
             //Log.d("nCharacteristicRead/Gatt_status", "status: " + status);
-
+            GattStatus = String.valueOf(status);
             if(status == BluetoothGatt.A2DP)
             {
                 GattModeIsA2DP=true;

@@ -10,7 +10,7 @@ import android.view.View;
 
 public class IntegerRangeSlider extends View {
 
-    private String descriptionText = "Use Sliders to select Data to submit ";
+    private String descriptionText = "Use Sliders to select Data to submit (works once 3 Datapoints are available) ";
     private Paint textPaint;
     private int previousLength = 0;
     private float thumbRadius = 20f;

@@ -1,10 +1,13 @@
 package com.aurelwu.indoorairqualitycollector;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.PowerManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -33,6 +36,7 @@ import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
 
+    private PowerManager.WakeLock wakeLock;
     ImageButton buttonGPSStatus;
     ImageButton buttonLocationPermissionStatus;
     ImageButton buttonBluetooth;
@@ -41,7 +45,11 @@ public class MainActivity extends AppCompatActivity {
     ImageButton buttonBluetoothConnectPermission;
     Button buttonStartRecording;
     Button buttonFinishRecording;
+
+    Button buttonCancelRecording;
     Button buttonUpdateNearByLocations;
+
+    boolean isUpdatingLocations = false;
     Spinner locationSpinner;
 
     TextView textViewPermissionAndServiceStatus;
@@ -58,6 +66,8 @@ public class MainActivity extends AppCompatActivity {
     boolean bluetoothConnectPermission = false;
     boolean updateIntervalSetTo1Minute = false;
     boolean deviceFound = false;
+
+    boolean firstCancelStepTriggered = false;
 
     int searchRadius = 100;
     String occupancyLevel = "undefined";
@@ -232,7 +242,7 @@ public class MainActivity extends AppCompatActivity {
         textInputEditTextCustomNotes = findViewById(R.id.TextInputEditTextNotes);
 
         layoutOccupancy = findViewById(R.id.LinearLayoutOccupancy);
-
+        buttonCancelRecording = findViewById(R.id.buttonAbort);
 
 
         locationSpinner = findViewById(R.id.spinnerSelectLocation);
@@ -246,6 +256,8 @@ public class MainActivity extends AppCompatActivity {
     public void OnStartRecordingButton(View view)
     {
 
+
+
         transmissionState = "none";
         selectedLocation = (LocationData)locationSpinner.getSelectedItem();
         if(selectedLocation==null)
@@ -253,6 +265,12 @@ public class MainActivity extends AppCompatActivity {
             //maybe display message that no location selected?)
             return;
         }
+
+        // Acquire the wakelock
+        PowerManager powerManager = (PowerManager) this.getSystemService(Context.POWER_SERVICE);
+        wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "IndoorCO2App::SensorDataRecordingWakelock");
+        wakeLock.acquire();
+
         //TODO:
         buttonFinishRecording.setEnabled(false);
         layoutStopRecording.setVisibility(View.VISIBLE);
@@ -289,6 +307,11 @@ public class MainActivity extends AppCompatActivity {
         buttonFinishRecording.setEnabled(false);
         buttonFinishRecording.setText(("Submitting"));
         ApiGatewayCaller.sendJsonToApiGateway(json,this);
+
+        // Release the wakelock
+        if (wakeLock != null && wakeLock.isHeld()) {
+            wakeLock.release();
+        }
     }
 
     public void OnTransmissionSuccess()
@@ -316,8 +339,22 @@ public class MainActivity extends AppCompatActivity {
 
     public void OnCancelRecording(View view)
     {
-        logic.FinishRecording(checkBoxWindowsDoors.isChecked(),checkBoxVentilationSystem.isChecked(),occupancyLevel,textInputEditTextCustomNotes.getText().toString());
-        OnStopRecordingChangeUI();
+        if(!firstCancelStepTriggered)
+        {
+            firstCancelStepTriggered = true;
+            buttonCancelRecording.setText("Confirm Cancel");
+        }
+        else
+        {
+            logic.FinishRecording(checkBoxWindowsDoors.isChecked(),checkBoxVentilationSystem.isChecked(),occupancyLevel,textInputEditTextCustomNotes.getText().toString());
+            OnStopRecordingChangeUI();
+            // Release the wakelock
+            if (wakeLock != null && wakeLock.isHeld()) {
+                wakeLock.release();
+            }
+            buttonCancelRecording.setText("Cancel");
+            firstCancelStepTriggered = false;
+        }
 
     }
 
@@ -350,8 +387,19 @@ public class MainActivity extends AppCompatActivity {
 
     public void OnButtonClickUpdateLocationSpinner(View view)
     {
-        logic.spatialManager.overpassModule.FetchNearbyBuildings();
-        //UpdateLocationSelectionSpinner();
+        buttonUpdateNearByLocations.setTextColor(Color.WHITE);
+        buttonUpdateNearByLocations.setText("updating Locations...");
+        buttonUpdateNearByLocations.setEnabled(false);
+        isUpdatingLocations = true;
+        logic.spatialManager.overpassModule.FetchNearbyBuildings(this);
+
+    }
+
+    public void OnButtonClickUpdateLocationSpinnerFinished()
+    {
+        buttonUpdateNearByLocations.setText("Update Nearby Locations");
+        buttonUpdateNearByLocations.setTextColor(Color.BLACK);
+        isUpdatingLocations = false;
     }
 
     public void UpdateLocationSelectionSpinner()
@@ -486,7 +534,7 @@ public class MainActivity extends AppCompatActivity {
             }
             else if(logic.aranetManager.currentReading != null)
             {
-                textViewSensorStatus.setText("Device ID: " + logic.aranetManager.aranetMAC + "\r\nlast value: " + logic.aranetManager.currentReading.CO2ppm + "ppm. Update in " + timeToNextUpdate + " seconds");
+                textViewSensorStatus.setText("ID: " + logic.aranetManager.aranetMAC + " | rssi: " + logic.aranetManager.rssi + " | gattS: " + logic.aranetManager.GattStatus + "\r\nlast value: " + logic.aranetManager.currentReading.CO2ppm + "ppm. Update in " + timeToNextUpdate + " seconds");
             }
 
             else if(logic.aranetManager.currentReading == null && logic.aranetManager.GattModeIsA2DP==true)
@@ -496,7 +544,7 @@ public class MainActivity extends AppCompatActivity {
 
             else if(logic.aranetManager.currentReading == null)
             {
-                textViewSensorStatus.setText("Waiting for first sensor update. This might take up to a Minute");
+                textViewSensorStatus.setText("Waiting for first sensor update. This might take a Minute | ID: " + logic.aranetManager.aranetMAC + " | rssi: " + logic.aranetManager.rssi + "GattS: " +logic.aranetManager.GattStatus);
             }
         }
 
@@ -527,9 +575,14 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else
                 {
-                    textViewLocationStatus.setText("Current Location:\r\nLat: " + String.format("%.6f", logic.spatialManager.myLatitude) + " | Lon: " + String.format("%.6f", logic.spatialManager.myLongitude));
+                    textViewLocationStatus.setText(String.format("Lat:" +"%.6f", logic.spatialManager.myLatitude) + " | Lon: " + String.format("%.6f", logic.spatialManager.myLongitude));
                 }
-                buttonUpdateNearByLocations.setEnabled(true);
+
+                if(isUpdatingLocations==false)
+                {
+                    buttonUpdateNearByLocations.setEnabled(true);
+                }
+
             }
             else
             {

@@ -83,6 +83,7 @@ public class    LineChartView extends View {
         for (int i = 400; i <= getMaxDataValue(); i += 400) {
             float y = height - paddingBottom - (i - 300) * yScale; // Adjust for min value
             canvas.drawLine(paddingLeft + 10, y, paddingLeft+2, y, paint); // Tick mark
+            paint.setTextSize(20);
             canvas.drawText(String.valueOf(i), paddingLeft + 15, y + 10, paint); // Label
         }
         if(data.length==0) return; //happens at start when we have no data recorded yet

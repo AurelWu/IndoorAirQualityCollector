@@ -32,11 +32,18 @@ public class OverpassModule
     }
     private String buildOverpassQuery(double latitude,double longitude,double radius) {
         locationData = new ArrayList<>();
+        //latitude = 51.1828806;
+        //longitude = 7.1872148;
         // Construct the Overpass query with the specified radius and location
         //TODO: add remaining categories of amenities and maybe other
         return "[out:json];" +
                 "(" +
                 "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[shop];" +
+                "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[leisure=fitness_centre];" +
+                "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[leisure=bowling_alley];" +
+                "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[leisure=ice_rink];" +
+                "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[leisure=sports_centre];" +
+                "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[leisure=sports_hall];" +
                 "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=bar];" +
                 "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=place_of_worship];" +
                 "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=pub];" +
@@ -110,7 +117,7 @@ public class OverpassModule
         spatialManager.mainActivity.invalidateLocations = true; //bit dirty but whatever
     }
 
-    public void FetchNearbyBuildings() {
+    public void FetchNearbyBuildings(MainActivity mainActivity) {
         Log.d("fetchNearbyBuildings", "fetch NearbyBuildings called");
         locationData.clear();
         String overpassQuery = buildOverpassQuery(spatialManager.myLatitude, spatialManager.myLongitude, spatialManager.searchRadius);
@@ -126,6 +133,7 @@ public class OverpassModule
             @Override
             public void onFailure(Call call, IOException e) {
                 e.printStackTrace();
+                mainActivity.OnButtonClickUpdateLocationSpinnerFinished();
                 // Handle failure
             }
 
@@ -134,8 +142,10 @@ public class OverpassModule
                 if (response.isSuccessful()) {
                     String jsonData = response.body().string();
                     parseOverpassResponse(jsonData);
+                    mainActivity.OnButtonClickUpdateLocationSpinnerFinished();
                     // Update UI on the main thread if necessary
                 } else {
+                    mainActivity.OnButtonClickUpdateLocationSpinnerFinished();
                     // Handle unsuccessful response
                 }
             }

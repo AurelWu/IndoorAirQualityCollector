@@ -5,6 +5,7 @@
     android:id="@+id/RadioButtonSearchRange250m"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#1C1C1C"
     android:scaleX="1"
     tools:context=".MainActivity">
 
@@ -33,7 +34,8 @@
                 android:autoSizeTextType="uniform"
                 android:gravity="center_vertical"
                 android:text="Status Overview"
-                android:textAlignment="center" />
+                android:textAlignment="center"
+                android:textColor="#FFFFFF" />
 
         </LinearLayout>
 
@@ -169,7 +171,8 @@
                 android:id="@+id/textViewStatus"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="TextView" />
+                android:text="TextView"
+                android:textColor="#FFFFFF" />
         </LinearLayout>
 
         <LinearLayout
@@ -186,6 +189,7 @@
                 android:layout_weight="1"
                 android:text="Sensor Status:"
                 android:textAlignment="textStart"
+                android:textColor="#FFFFFF"
                 android:textSize="14sp" />
         </LinearLayout>
 
@@ -201,7 +205,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="TextView" />
+                android:text="TextView"
+                android:textColor="#FFFFFF" />
         </LinearLayout>
 
         <LinearLayout
@@ -218,7 +223,8 @@
                 android:layout_height="match_parent"
                 android:layout_weight=".5"
                 android:gravity="center"
-                android:text="Search Range:" />
+                android:text="Search Range:"
+                android:textColor="#FFFFFF" />
 
             <RadioGroup
                 android:layout_width="match_parent"
@@ -232,7 +238,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="50m" />
+                    android:text="50m"
+                    android:textColor="#FFFFFF" />
 
                 <RadioButton
                     android:id="@+id/radioButtonSearchRange100m"
@@ -241,14 +248,16 @@
                     android:layout_weight="1"
                     android:enabled="true"
                     android:saveEnabled="false"
-                    android:text="100m" />
+                    android:text="100m"
+                    android:textColor="#FFFFFF" />
 
                 <RadioButton
                     android:id="@+id/radioButtonSearchRange250m"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="250m" />
+                    android:text="250m"
+                    android:textColor="#FFFFFF" />
 
             </RadioGroup>
 
@@ -258,14 +267,16 @@
             android:id="@+id/buttonUpdateNearbyLocations"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="#713881"
             android:enabled="false"
             android:onClick="OnButtonClickUpdateLocationSpinner"
-            android:text="Update Nearby Locations" />
+            android:text="Update Nearby Locations"
+            android:textColor="#000000" />
 
         <LinearLayout
             android:id="@+id/LinearLayoutLocationSelector"
             android:layout_width="match_parent"
-            android:layout_height="70dp"
+            android:layout_height="80dp"
             android:layout_marginHorizontal="10px"
             android:orientation="horizontal">
 
@@ -275,7 +286,8 @@
                 android:layout_height="match_parent"
                 android:layout_weight="3"
                 android:gravity="center"
-                android:text="Select Location: " />
+                android:text="Select Location: "
+                android:textColor="#FFFFFF" />
 
             <Spinner
                 android:id="@+id/spinnerSelectLocation"
@@ -289,9 +301,11 @@
             android:id="@+id/buttonStartRecording"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="#713881"
             android:enabled="false"
             android:onClick="OnStartRecordingButton"
             android:text="Start Recording"
+            android:textColor="#000000"
             android:textSize="24sp" />
 
         <Space
@@ -310,8 +324,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="32dp"
+                android:background="#713881"
                 android:onClick="OnOpenMapInBrowser"
                 android:text="Open Map in Browser"
+                android:textColor="#000000"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.84000003"
@@ -321,8 +337,10 @@
                 android:id="@+id/buttonImpressum"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="#713881"
                 android:onClick="OnOpenImprint"
                 android:text="Imprint / Data Protection Statement"
+                android:textColor="#000000"
                 app:layout_constraintBottom_toBottomOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -338,8 +356,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="4"
+                android:background="#713881"
                 android:onClick="OnFinishAndSubmitRecording"
                 android:text="Submit Data"
+                android:textColor="#000000"
                 android:visibility="visible" />
 
             <Space
@@ -353,11 +373,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
+                android:background="#713881"
                 android:maxLines="1"
-                app:autoSizeTextType="uniform"
                 android:onClick="OnCancelRecording"
                 android:text="Cancel"
-                android:visibility="visible" />
+                android:textColor="#000000"
+                android:visibility="visible"
+                app:autoSizeTextType="uniform" />
         </LinearLayout>
 
         <LinearLayout
@@ -392,14 +414,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Open Windows/Doors" />
+                android:text="Open Windows/Doors"
+                android:textColor="#FFFFFF" />
 
             <CheckBox
                 android:id="@+id/checkBoxVentilationSystem"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="VentilationSystem" />
+                android:text="VentilationSystem"
+                android:textColor="#FFFFFF" />
 
         </LinearLayout>
 
@@ -429,21 +453,24 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="5"
-                    android:text="low" />
+                    android:text="low"
+                    android:textColor="#FFFFFF" />
 
                 <RadioButton
                     android:id="@+id/radioButtonMediumOccupancy"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="5"
-                    android:text="medium" />
+                    android:text="medium"
+                    android:textColor="#FFFFFF" />
 
                 <RadioButton
                     android:id="@+id/radioButtonHighOccupancy"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="5"
-                    android:text="high" />
+                    android:text="high"
+                    android:textColor="#FFFFFF" />
             </RadioGroup>
         </LinearLayout>
 
@@ -451,6 +478,7 @@
             android:id="@+id/TextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColorHint="#FFFFFF"
             tools:visibility="gone">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -460,7 +488,8 @@
                 android:gravity="start|top"
                 android:hint="enter additional info (optional)"
                 android:inputType="textMultiLine"
-                android:maxLength="1000" />
+                android:maxLength="1000"
+                android:textColor="#FFFFFF" />
         </com.google.android.material.textfield.TextInputLayout>
 
     </LinearLayout>

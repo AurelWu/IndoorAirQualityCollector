@@ -21,6 +21,8 @@ public class IntegerRangeSlider extends View {
 
     private Paint paint;
 
+    private boolean hasTouchedSliderBefore = false;
+
     public IntegerRangeSlider(Context context) {
         super(context);
         init();
@@ -53,6 +55,7 @@ public class IntegerRangeSlider extends View {
         min = 0;
         max = 1;
         previousLength = 0;
+        hasTouchedSliderBefore = false;
     }
 
     @Override
@@ -65,6 +68,11 @@ public class IntegerRangeSlider extends View {
 
         // Draw range
         paint.setColor(Color.WHITE);
+        if(!hasTouchedSliderBefore)
+        {
+            minValue=0;
+            maxValue=max;
+        }
         float minX = valueToX(minValue);
         float maxX = valueToX(maxValue);
         canvas.drawLine(minX, getHeight() / 2f, maxX, getHeight() / 2f, paint);
@@ -95,6 +103,7 @@ public class IntegerRangeSlider extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        hasTouchedSliderBefore=true;
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
             case MotionEvent.ACTION_MOVE:

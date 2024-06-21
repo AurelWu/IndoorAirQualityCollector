@@ -2,7 +2,9 @@ package com.aurelwu.indoorairqualitycollector;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -22,6 +24,8 @@ import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.ListPopupWindow;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
@@ -31,23 +35,25 @@ import androidx.core.view.WindowInsetsCompat;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
 
-    private PowerManager.WakeLock wakeLock;
+    private boolean showExactLocation = false;
+    //private PowerManager.WakeLock wakeLock;
     ImageButton buttonGPSStatus;
     ImageButton buttonLocationPermissionStatus;
     ImageButton buttonBluetooth;
 
     ImageButton buttonBluetoothScanPermission;
     ImageButton buttonBluetoothConnectPermission;
-    Button buttonStartRecording;
-    Button buttonFinishRecording;
+    AppCompatButton buttonStartRecording;
+    AppCompatButton buttonFinishRecording;
 
-    Button buttonCancelRecording;
-    Button buttonUpdateNearByLocations;
+    AppCompatButton buttonCancelRecording;
+    AppCompatButton buttonUpdateNearByLocations;
 
     boolean isUpdatingLocations = false;
     Spinner locationSpinner;
@@ -99,8 +105,8 @@ public class MainActivity extends AppCompatActivity {
     CheckBox checkBoxWindowsDoors;
     CheckBox checkBoxVentilationSystem;
 
-    Button buttonOpenMapInBrowser;
-    Button buttonImpressumDataProtection; //links to webpage with this statemenet
+    AppCompatButton buttonOpenMapInBrowser;
+    AppCompatButton buttonImpressumDataProtection; //links to webpage with this statemenet
     ConstraintLayout constraintLayoutMap;
 
     public boolean invalidateLocations = false;
@@ -108,6 +114,9 @@ public class MainActivity extends AppCompatActivity {
     public String transmissionState = "";
 
     Logic logic;
+
+    int buttonColorEnabled = Color.parseColor("#FAA5DA");
+    int buttonColorDisabled = Color.parseColor("#222222");
 
     LocationData selectedLocation = null;
 
@@ -185,6 +194,7 @@ public class MainActivity extends AppCompatActivity {
 
         logic = new Logic(this);
 
+
         buttonUpdateNearByLocations = findViewById(R.id.buttonUpdateNearbyLocations);
         buttonGPSStatus = findViewById(R.id.imageButtonGPS);
         buttonBluetooth = findViewById(R.id.buttonBluetoothStatus);
@@ -247,10 +257,33 @@ public class MainActivity extends AppCompatActivity {
 
         locationSpinner = findViewById(R.id.spinnerSelectLocation);
 
+        buttonUpdateNearByLocations.setBackgroundColor(buttonColorEnabled);
+        buttonFinishRecording.setBackgroundColor(buttonColorEnabled);
+        buttonOpenMapInBrowser.setBackgroundColor(buttonColorEnabled);
+        buttonImpressumDataProtection.setBackgroundColor(buttonColorEnabled);
+        buttonCancelRecording.setBackgroundColor(buttonColorEnabled);
+        buttonFinishRecording.setBackgroundColor(buttonColorEnabled);
 
         UIUpdater.postDelayed(Update, 2000);
 
         logic.spatialManager.searchRadius = searchRadius;
+
+        ColorDrawable backgroundDrawable = new ColorDrawable(0xFF444444); // Dark grey color
+        //locationSpinner.setBackgroundColor(0xFF444444);
+        // Set the background drawable to the Spinner's popup using reflection
+        //try {
+        //    Field popup = Spinner.class.getDeclaredField("mPopup");
+        //    popup.setAccessible(true);
+//
+        //    Object popupWindow = popup.get(locationSpinner);
+//
+        //    if (popupWindow instanceof ListPopupWindow) {
+        //        ListPopupWindow listPopupWindow = (ListPopupWindow) popupWindow;
+        //        listPopupWindow.setBackgroundDrawable(backgroundDrawable);
+        //    }
+        //} catch (Exception e) {
+        //    e.printStackTrace();
+        //}
     }
 
     public void OnStartRecordingButton(View view)
@@ -267,12 +300,13 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // Acquire the wakelock
-        PowerManager powerManager = (PowerManager) this.getSystemService(Context.POWER_SERVICE);
-        wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "IndoorCO2App::SensorDataRecordingWakelock");
-        wakeLock.acquire();
+        //PowerManager powerManager = (PowerManager) this.getSystemService(Context.POWER_SERVICE);
+        //wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "IndoorCO2App::SensorDataRecordingWakelock");
+        //wakeLock.acquire();
 
         //TODO:
         buttonFinishRecording.setEnabled(false);
+        buttonFinishRecording.setBackgroundColor(buttonColorDisabled);
         layoutStopRecording.setVisibility(View.VISIBLE);
         layoutSearchRangeSelection.setVisibility(View.GONE);
         layoutLocationSelection.setVisibility(View.GONE);
@@ -305,17 +339,20 @@ public class MainActivity extends AppCompatActivity {
         String json = logic.GenerateJSONToTransmit(chartRangeSlider.getMinValue(),chartRangeSlider.getMaxValue());
         transmissionState = "none";
         buttonFinishRecording.setEnabled(false);
+        buttonFinishRecording.setBackgroundColor(buttonColorDisabled);
+        buttonFinishRecording.setTextColor(Color.LTGRAY);
         buttonFinishRecording.setText(("Submitting"));
         ApiGatewayCaller.sendJsonToApiGateway(json,this);
 
-        // Release the wakelock
-        if (wakeLock != null && wakeLock.isHeld()) {
-            wakeLock.release();
-        }
+        //// Release the wakelock
+        //if (wakeLock != null && wakeLock.isHeld()) {
+        //    wakeLock.release();
+        //}
     }
 
     public void OnTransmissionSuccess()
     {
+        buttonFinishRecording.setTextColor(Color.LTGRAY);
         buttonFinishRecording.setText("Transmission successful!");
 
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
@@ -332,7 +369,9 @@ public class MainActivity extends AppCompatActivity {
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
+
                 buttonFinishRecording.setEnabled(true);
+                buttonFinishRecording.setBackgroundColor(buttonColorEnabled);
             }
         }, 2000); // 3000 milliseconds = 3 seconds
     }
@@ -348,10 +387,10 @@ public class MainActivity extends AppCompatActivity {
         {
             logic.FinishRecording(checkBoxWindowsDoors.isChecked(),checkBoxVentilationSystem.isChecked(),occupancyLevel,textInputEditTextCustomNotes.getText().toString());
             OnStopRecordingChangeUI();
-            // Release the wakelock
-            if (wakeLock != null && wakeLock.isHeld()) {
-                wakeLock.release();
-            }
+            //// Release the wakelock
+            //if (wakeLock != null && wakeLock.isHeld()) {
+            //    wakeLock.release();
+            //}
             buttonCancelRecording.setText("Cancel");
             firstCancelStepTriggered = false;
         }
@@ -387,9 +426,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void OnButtonClickUpdateLocationSpinner(View view)
     {
-        buttonUpdateNearByLocations.setTextColor(Color.WHITE);
+        buttonUpdateNearByLocations.setTextColor(Color.LTGRAY);
         buttonUpdateNearByLocations.setText("updating Locations...");
         buttonUpdateNearByLocations.setEnabled(false);
+        buttonUpdateNearByLocations.setBackgroundColor(buttonColorDisabled);
         isUpdatingLocations = true;
         logic.spatialManager.overpassModule.FetchNearbyBuildings(this);
 
@@ -399,6 +439,8 @@ public class MainActivity extends AppCompatActivity {
     {
         buttonUpdateNearByLocations.setText("Update Nearby Locations");
         buttonUpdateNearByLocations.setTextColor(Color.BLACK);
+        //buttonUpdateNearByLocations.setEnabled(true);
+        //buttonUpdateNearByLocations.setBackgroundColor(Color.MAGENTA);
         isUpdatingLocations = false;
     }
 
@@ -408,13 +450,14 @@ public class MainActivity extends AppCompatActivity {
         defaultMessageList.add("No Locations found, search again");
         if(!invalidateLocations) return;
         ArrayAdapter<LocationData> adapter = new LocationDataAdapter(this, logic.spatialManager.overpassModule.locationData);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        adapter.setDropDownViewResource(R.layout.custom_spinner_item);
+
         locationSpinner.setAdapter(adapter);
         locationSpinner.setEnabled(true);
         if(logic.spatialManager.overpassModule.locationData.isEmpty())
         {
             locationSpinner.setEnabled(false);
-            ArrayAdapter<String> emptyAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_dropdown_item,defaultMessageList);
+            ArrayAdapter<String> emptyAdapter = new ArrayAdapter<String>(this,R.layout.custom_spinner_item,defaultMessageList);
         }
 
         invalidateLocations=false;
@@ -552,16 +595,25 @@ public class MainActivity extends AppCompatActivity {
         {
             if(logic.spatialManager.overpassModule.locationData.size() == 0)
             {
+                buttonStartRecording.setTextColor(Color.LTGRAY);
+                buttonStartRecording.setText("Start Recording (needs Location)");
                 buttonStartRecording.setEnabled(false);
+                buttonStartRecording.setBackgroundColor(buttonColorDisabled);
             }
             else
             {
                 buttonStartRecording.setEnabled(true);
+                buttonStartRecording.setBackgroundColor(buttonColorEnabled);
+                buttonStartRecording.setTextColor(Color.BLACK);
+                buttonStartRecording.setText("Start Recording");
             }
         }
         else
         {
+            buttonStartRecording.setTextColor(Color.LTGRAY);
+            buttonStartRecording.setText("Start Recording (not all requirements met)");
             buttonStartRecording.setEnabled(false);
+            buttonStartRecording.setBackgroundColor(buttonColorDisabled);
         }
 
         if(GPSEnabled && locationPermission)
@@ -575,12 +627,21 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else
                 {
-                    textViewLocationStatus.setText(String.format("Lat:" +"%.6f", logic.spatialManager.myLatitude) + " | Lon: " + String.format("%.6f", logic.spatialManager.myLongitude));
+                    if(showExactLocation)
+                    {
+                        textViewLocationStatus.setText(String.format("Lat:" +"%.6f", logic.spatialManager.myLatitude) + " | Lon: " + String.format("%.6f", logic.spatialManager.myLongitude) + " (tap to hide)");
+                    }
+                    else
+                    {
+                        textViewLocationStatus.setText(String.format("Lat:" +"%.1f" + "***", logic.spatialManager.myLatitude) + " | Lon: " + String.format("%.1f" + "***", logic.spatialManager.myLongitude) + " (tap to show)");
+                    }
+
                 }
 
                 if(isUpdatingLocations==false)
                 {
                     buttonUpdateNearByLocations.setEnabled(true);
+                    buttonUpdateNearByLocations.setBackgroundColor(buttonColorEnabled);
                 }
 
             }
@@ -588,33 +649,46 @@ public class MainActivity extends AppCompatActivity {
             {
                 textViewLocationStatus.setText("GPS enabled and Location permissions granted. Getting first Location Info. This might take a minute");
                 buttonUpdateNearByLocations.setEnabled(false);
+                buttonUpdateNearByLocations.setBackgroundColor(buttonColorDisabled);
             }
         }
         else
         {
             textViewLocationStatus.setText("");
-            if(!GPSEnabled) textViewLocationStatus.append("GPS not enabled");
+            if(!GPSEnabled) textViewLocationStatus.append("GPS not enabled ");
             if(!locationPermission) textViewLocationStatus.append("Location Permission missing");
             buttonUpdateNearByLocations.setEnabled(false);
+            buttonUpdateNearByLocations.setBackgroundColor(buttonColorDisabled);
         }
 
         if(logic.aranetManager.isRecording)
         {
-            lineChartView.setData(logic.aranetManager.GetCO2Data());
-            chartRangeSlider.SetDataRange(logic.aranetManager.GetCO2Data().length);
-            if(logic.aranetManager.GetCO2Data().length<5 || (chartRangeSlider.getMaxValue()-chartRangeSlider.getMinValue() <4))
+            int[] co2Data = logic.aranetManager.GetCO2Data();
+
+            //if(co2Data.length>0)
+            //{
+                lineChartView.setData(co2Data);
+                chartRangeSlider.SetDataRange(co2Data.length);
+            //}
+
+            if(co2Data.length<5 || (chartRangeSlider.getMaxValue()-chartRangeSlider.getMinValue() <4))
             {
                 buttonFinishRecording.setEnabled(false);
+                buttonFinishRecording.setBackgroundColor(buttonColorDisabled);
+                buttonFinishRecording.setTextColor(Color.LTGRAY);
                 buttonFinishRecording.setText("Submit (needs 5 minutes of Data)");
             }
             else
             {
                 buttonFinishRecording.setEnabled(true);
+                buttonFinishRecording.setBackgroundColor(buttonColorEnabled);
+                buttonFinishRecording.setTextColor(Color.BLACK);
                 buttonFinishRecording.setText("Submit Data");
             }
         }
         if(transmissionState == "failure")
         {
+            buttonFinishRecording.setTextColor(Color.BLACK);
             buttonFinishRecording.setText("Failed to Submit Data, try again");
         }
         if(transmissionState == "success")
@@ -713,5 +787,10 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(Uri.parse(URL));
         startActivity(intent);
+    }
+
+    public void OnShowExactLocation(View view)
+    {
+        showExactLocation = !showExactLocation;
     }
 }

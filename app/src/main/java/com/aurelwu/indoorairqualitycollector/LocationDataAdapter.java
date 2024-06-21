@@ -7,30 +7,37 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import java.util.ArrayList;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import java.util.List;
 
 public class LocationDataAdapter extends ArrayAdapter<LocationData> {
 
-    public LocationDataAdapter(Context context, ArrayList<LocationData> objects) {
-        super(context, 0, objects);
+    public LocationDataAdapter(@NonNull Context context, @NonNull List<LocationData> locations) {
+        super(context, 0, locations);
     }
 
+    @NonNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        LocationData myObject = getItem(position);
-
+    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(android.R.layout.simple_spinner_item, parent, false);
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.custom_spinner_item, parent, false);
         }
-
-        TextView textView = convertView.findViewById(android.R.id.text1);
-        textView.setText(myObject.GetSpinnerstring());
-
+        TextView textView = convertView.findViewById(R.id.text1);
+        LocationData locationData = getItem(position);
+        textView.setText(locationData.GetSpinnerstring());
         return convertView;
     }
 
     @Override
-    public View getDropDownView(int position, View convertView, ViewGroup parent) {
-        return getView(position, convertView, parent);
+    public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+        if (convertView == null) {
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.custom_spinner_item, parent, false);
+        }
+        TextView textView = convertView.findViewById(R.id.text1);
+        LocationData locationData = getItem(position);
+        textView.setText(locationData.GetSpinnerstring());
+        return convertView;
     }
 }

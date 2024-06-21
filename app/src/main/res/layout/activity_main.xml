@@ -205,6 +205,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:onClick="OnShowExactLocation"
                 android:text="TextView"
                 android:textColor="#FFFFFF" />
         </LinearLayout>
@@ -263,15 +264,18 @@
 
         </LinearLayout>
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/buttonUpdateNearbyLocations"
+            style="@style/CustomButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#713881"
+            android:background="#CAA5DA"
+            android:clickable="true"
             android:enabled="false"
             android:onClick="OnButtonClickUpdateLocationSpinner"
             android:text="Update Nearby Locations"
-            android:textColor="#000000" />
+            android:textColor="#000000"
+            android:textColorLink="#FFFFFF" />
 
         <LinearLayout
             android:id="@+id/LinearLayoutLocationSelector"
@@ -295,17 +299,20 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1" />
 
+
         </LinearLayout>
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/buttonStartRecording"
+            style="@style/CustomButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#713881"
+            android:background="#CAA5DA"
             android:enabled="false"
             android:onClick="OnStartRecordingButton"
             android:text="Start Recording"
             android:textColor="#000000"
+            android:textColorLink="#FFFFFF"
             android:textSize="24sp" />
 
         <Space
@@ -319,28 +326,32 @@
             android:layout_height="match_parent"
             android:layout_marginBottom="16px">
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/buttonOpenMapInBrowser"
+                style="@style/CustomButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="32dp"
-                android:background="#713881"
+                android:background="#CAA5DA"
                 android:onClick="OnOpenMapInBrowser"
                 android:text="Open Map in Browser"
                 android:textColor="#000000"
+                android:textColorLink="#FFFFFF"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.84000003"
                 tools:layout_editor_absoluteX="16dp" />
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/buttonImpressum"
+                style="@style/CustomButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#713881"
+                android:background="#CAA5DA"
                 android:onClick="OnOpenImprint"
                 android:text="Imprint / Data Protection Statement"
                 android:textColor="#000000"
+                android:textColorLink="#FFFFFF"
                 app:layout_constraintBottom_toBottomOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -351,15 +362,17 @@
             android:orientation="horizontal"
             android:visibility="gone">
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/buttonFinishRecording"
+                style="@style/CustomButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="4"
-                android:background="#713881"
+                android:background="#CAA5DA"
                 android:onClick="OnFinishAndSubmitRecording"
                 android:text="Submit Data"
                 android:textColor="#000000"
+                android:textColorLink="#FFFFFF"
                 android:visibility="visible" />
 
             <Space
@@ -368,18 +381,20 @@
                 android:layout_marginHorizontal="8px"
                 android:layout_weight=".2" />
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/buttonAbort"
+                style="@style/CustomButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
-                android:background="#713881"
-                android:maxLines="1"
+                android:background="#CAA5DA"
+                android:maxLines="2"
                 android:onClick="OnCancelRecording"
                 android:text="Cancel"
                 android:textColor="#000000"
+                android:textColorLink="#FFFFFF"
                 android:visibility="visible"
-                app:autoSizeTextType="uniform" />
+                app:autoSizeTextType="none" />
         </LinearLayout>
 
         <LinearLayout

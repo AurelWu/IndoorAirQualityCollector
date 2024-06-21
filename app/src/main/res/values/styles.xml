@@ -1,0 +1,13 @@
+<!-- res/values/styles.xml -->
+<resources>
+    <!-- Base application theme -->
+    <style name="AppTheme" parent="Base.Theme.IndoorAirQualityCollector">
+        <!-- Customize your theme here -->
+        <item name="buttonStyle">@style/CustomButton</item> <!-- Apply the custom button style globally -->
+    </style>
+
+    <!-- Custom button style -->
+    <style name="CustomButton" parent="Widget.AppCompat.Button">
+        <item name="android:textColor">@color/button_text_color</item>
+    </style>
+</resources>

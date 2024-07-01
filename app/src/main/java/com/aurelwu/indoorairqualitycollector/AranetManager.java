@@ -299,7 +299,10 @@ public class AranetManager {
                 long timeDifferenceLocation = System.currentTimeMillis() - timeOfRecordingStart;
                 elapsedMinutes = (short) ((timeDifferenceLocation + 59999) / 60000); // Adding 59999 to ensure rounding up
                 startidx = (short) (totalDataPoints - (0 + elapsedMinutes)); //change value to start with a bit of pre-recording history
-                if (startidx < 0) startidx = 0;
+                if (startidx < 0)
+                {
+                    startidx = 0;
+                }
 
                 writeCharacteristic.setValue(DataArrayBuilder.packDataRequestCO2History(startidx));
                 gatt.writeCharacteristic(writeCharacteristic);

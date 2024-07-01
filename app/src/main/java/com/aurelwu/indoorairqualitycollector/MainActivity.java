@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
     boolean isUpdatingLocations = false;
     Spinner locationSpinner;
 
+    TextView textViewCC0;
     TextView textViewPermissionAndServiceStatus;
     TextView textViewSensorStatus;
     TextView textViewLocationStatus;
@@ -72,6 +73,8 @@ public class MainActivity extends AppCompatActivity {
     boolean bluetoothConnectPermission = false;
     boolean updateIntervalSetTo1Minute = false;
     boolean deviceFound = false;
+
+    boolean auxiliaryLocationMode = false;
 
     boolean firstCancelStepTriggered = false;
 
@@ -136,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
 
         logic = new Logic(this);
 
-
+        textViewCC0 = findViewById(R.id.textViewCC0);
         buttonUpdateNearByLocations = findViewById(R.id.buttonUpdateNearbyLocations);
         buttonGPSStatus = findViewById(R.id.imageButtonGPS);
         buttonBluetooth = findViewById(R.id.buttonBluetoothStatus);
@@ -247,6 +250,7 @@ public class MainActivity extends AppCompatActivity {
         //wakeLock.acquire();
 
         //TODO:
+        textViewCC0.setVisibility(View.GONE);
         buttonFinishRecording.setEnabled(false);
         buttonFinishRecording.setBackgroundColor(buttonColorDisabled);
         layoutStopRecording.setVisibility(View.VISIBLE);
@@ -342,6 +346,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void OnStopRecordingChangeUI()
     {
+        textViewCC0.setVisibility(View.GONE);
         buttonStartRecording.setVisibility(View.VISIBLE);
         layoutStopRecording.setVisibility(View.GONE);
         layoutSearchRangeSelection.setVisibility(View.VISIBLE);

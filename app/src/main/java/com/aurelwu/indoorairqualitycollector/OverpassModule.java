@@ -44,6 +44,7 @@ public class OverpassModule
                 "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[leisure=ice_rink];" +
                 "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[leisure=sports_centre];" +
                 "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[leisure=sports_hall];" +
+                "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=events_centre];" +
                 "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=bar];" +
                 "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=place_of_worship];" +
                 "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=pub];" +
@@ -58,13 +59,23 @@ public class OverpassModule
                 "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=kindergarten];" +
                 "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=language_school];" +
                 "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=library];" +
+                "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=cinema];" +
+                "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=theatre];" +
+                "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=arts_centre];" +
+                "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=playground][indoor=yes];" +
+                "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=music_venue];" +
                 "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=research_institute];" +
                 "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=music_school];" +
                 "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=school];" +
+                "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=townhall];" +
+                "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=courthouse];" +
+                "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=post_office];" +
                 "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=university];" +
                 "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=hospital];" +
                 "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=clinic];" +
                 "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=doctors];" +
+                "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=pharmacy];" +
+                "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=social_facility];" +
                 "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[healthcare];" +
                 "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[tourism=museum];" +
                 "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[tourism=gallery];" +

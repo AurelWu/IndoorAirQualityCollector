@@ -397,6 +397,13 @@
                 app:autoSizeTextType="none" />
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/textViewCC0"
+            android:layout_width="match_parent"
+            android:layout_height="22pt"
+            android:text="By submitting you dedicate the measurement to the public domain under the Creative Commons CC0 1.0 Universal Public Domain Dedication"
+            android:visibility="gone" />
+
         <LinearLayout
             android:id="@+id/LinearLayoutLineChartContainer"
             android:layout_width="match_parent"

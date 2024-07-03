@@ -10,7 +10,6 @@ import android.view.View;
 
 public class IntegerRangeSlider extends View {
 
-    private String descriptionText = "Use Sliders to select Data to submit (works once 3 Datapoints are available) ";
     private Paint textPaint;
     private int previousLength = 0;
     private float thumbRadius = 20f;
@@ -20,8 +19,8 @@ public class IntegerRangeSlider extends View {
     private int maxValue = 1;
 
     private Paint paint;
-
     private boolean hasTouchedSliderBefore = false;
+    private String descriptionText = "↑↑↑  ↑↑↑\r\nUse slider to trim start & end if required";
 
     public IntegerRangeSlider(Context context) {
         super(context);
@@ -45,13 +44,13 @@ public class IntegerRangeSlider extends View {
         textPaint = new Paint();
         textPaint.setAntiAlias(true);
         textPaint.setColor(Color.WHITE);
-        textPaint.setTextSize(20); // Set the text size as per your requirement
+        textPaint.setTextSize(30f);
+        textPaint.setTextAlign(Paint.Align.CENTER);
     }
 
-    public void ReInit()
-    {
-        maxValue=1;
-        minValue=0;
+    public void ReInit() {
+        maxValue = 1;
+        minValue = 0;
         min = 0;
         max = 1;
         previousLength = 0;
@@ -68,10 +67,9 @@ public class IntegerRangeSlider extends View {
 
         // Draw range
         paint.setColor(Color.WHITE);
-        if(!hasTouchedSliderBefore)
-        {
-            minValue=0;
-            maxValue=max;
+        if (!hasTouchedSliderBefore) {
+            minValue = 0;
+            maxValue = max;
         }
         float minX = valueToX(minValue);
         float maxX = valueToX(maxValue);
@@ -83,10 +81,11 @@ public class IntegerRangeSlider extends View {
         canvas.drawCircle(maxX, getHeight() / 2f, thumbRadius, paint);
 
         // Draw description text
-        if (!descriptionText.isEmpty()) {
-            float textX = getPaddingLeft();
-            float textY = getHeight() / 2f + thumbRadius + 30; // Adjust the Y position as per your requirement
-            canvas.drawText(descriptionText, textX, textY, textPaint);
+        float textX = getWidth() / 2f;
+        float textY = getHeight() / 2f + thumbRadius + 40; // Adjust the Y position as per your requirement
+        for (String line : descriptionText.split("\r\n")) {
+            canvas.drawText(line, textX, textY, textPaint);
+            textY += textPaint.getTextSize() + 10; // Adjust line spacing as needed
         }
     }
 
@@ -103,7 +102,7 @@ public class IntegerRangeSlider extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        hasTouchedSliderBefore=true;
+        hasTouchedSliderBefore = true;
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
             case MotionEvent.ACTION_MOVE:
@@ -137,18 +136,15 @@ public class IntegerRangeSlider extends View {
         return maxValue;
     }
 
-    public void SetDataRange(int length)
-    {
+    public void SetDataRange(int length) {
         min = 0; //always 0
-        max = Math.max(1,length-1);
+        max = Math.max(1, length - 1);
 
-        if(length>previousLength)
-        {
-            previousLength=length;
-            if(maxValue==max-1) maxValue=max;
+        if (length > previousLength) {
+            previousLength = length;
+            if (maxValue == max - 1) maxValue = max;
         }
 
         invalidate();
-
     }
 }

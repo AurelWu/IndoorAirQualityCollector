@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
     boolean isUpdatingLocations = false;
     Spinner locationSpinner;
 
+    TextView textViewTrimSliderInfo;
     TextView textViewCC0;
     TextView textViewPermissionAndServiceStatus;
     TextView textViewSensorStatus;
@@ -178,6 +179,7 @@ public class MainActivity extends AppCompatActivity {
         layoutStopRecording = findViewById(R.id.linearLayoutEndRecording);
         chartContainer = findViewById(R.id.LinearLayoutLineChartContainer);
         lineChartView = new LineChartView(this);
+        lineChartView.ProvideMainActivity(this);
         chartContainer.addView(lineChartView);
 
         chartRangeSliderContainer = findViewById(R.id.LinearLayoutChartRangeSliderContainer);
@@ -209,7 +211,7 @@ public class MainActivity extends AppCompatActivity {
         buttonCancelRecording.setBackgroundColor(buttonColorEnabled);
         buttonFinishRecording.setBackgroundColor(buttonColorEnabled);
 
-        UIUpdater.postDelayed(Update, 2000);
+        UIUpdater.postDelayed(Update, 100);
 
         logic.spatialManager.searchRadius = searchRadius;
 
@@ -722,7 +724,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void OnOpenMapInBrowser(View view)
     {
-        String mapURL = "http://indoorco2map.s3-website.eu-central-1.amazonaws.com/";
+        String mapURL = "https://indoorco2map.com/";
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(Uri.parse(mapURL));
         startActivity(intent);

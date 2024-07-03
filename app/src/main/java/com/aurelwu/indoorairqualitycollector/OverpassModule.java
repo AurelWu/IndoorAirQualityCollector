@@ -62,6 +62,12 @@ public class OverpassModule
                 "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=cinema];" +
                 "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=theatre];" +
                 "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=arts_centre];" +
+                "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=brothel];" +
+                "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=love_hotel];" +
+                "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=nightclub];" +
+                "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=planetarium];" +
+                "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=stripclub];" +
+                "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=social_centre];" +
                 "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=playground][indoor=yes];" +
                 "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=music_venue];" +
                 "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=research_institute];" +
@@ -73,9 +79,11 @@ public class OverpassModule
                 "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=university];" +
                 "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=hospital];" +
                 "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=clinic];" +
+                "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=dentist];" +
                 "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=doctors];" +
                 "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=pharmacy];" +
                 "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=social_facility];" +
+                "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[amenity=bank];" +
                 "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[healthcare];" +
                 "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[tourism=museum];" +
                 "  nwr(around:" + radius + "," + latitude + "," + longitude + ")[tourism=gallery];" +

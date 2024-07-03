@@ -12,6 +12,8 @@ public class    LineChartView extends View {
     private Paint paint;
     private int[] data;
 
+    MainActivity mainActivity;
+
     public LineChartView(Context context) {
         super(context);
         init();
@@ -35,6 +37,11 @@ public class    LineChartView extends View {
         data = new int[]{0}; // Sample data, you can replace it with your own
     }
 
+    public void ProvideMainActivity(MainActivity m)
+    {
+        this.mainActivity = m;
+    }
+
     public void setData(int[] newData) {
         data = newData;
         invalidate(); // Force the view to redraw with the new data
@@ -43,6 +50,9 @@ public class    LineChartView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+
+        int trimValueMin =mainActivity.chartRangeSlider.getMinValue();
+        int trimValueMax =mainActivity.chartRangeSlider.getMaxValue();
 
         int width = getWidth();
         int height = getHeight();
@@ -56,7 +66,7 @@ public class    LineChartView extends View {
         int usableHeight = height - paddingTop - paddingBottom;
 
         canvas.drawColor(Color.BLACK);
-
+        paint.setColor(Color.WHITE);
         // Draw X and Y axes
         canvas.drawLine(paddingLeft, paddingTop, paddingLeft, height - paddingBottom, paint); // Y-axis
         canvas.drawLine(paddingLeft, height - paddingBottom, width - paddingRight, height - paddingBottom, paint); // X-axis
@@ -93,13 +103,35 @@ public class    LineChartView extends View {
         float prevY = height - paddingBottom - (data[0] - 300) * yScale; // Adjust for min value
         for (int i = 0; i < data.length; i++)
         {
+            paint.setColor(Color.WHITE);
+
             float x = paddingLeft + i * xScale;
             float y = height - paddingBottom - (data[i] - 300) * yScale; // Adjust for min value
-            if(i>0) {
+            if(i>0)
+            {
+                if(trimValueMin>=i || i > trimValueMax)
+                {
+                    paint.setColor(Color.DKGRAY);
+                }
+                else
+                {
+                    paint.setColor(Color.WHITE);
+                }
+
                 canvas.drawLine(prevX, prevY, x, y, paint);
                 prevX = x;
                 prevY = y;
             }
+
+            if(trimValueMin>i || i > trimValueMax)
+            {
+                paint.setColor(Color.DKGRAY);
+            }
+            else
+            {
+                paint.setColor(Color.WHITE);
+            }
+
             if(data.length==1)
             {
                 canvas.drawCircle(usableWidth/2, y, 8, paint); // Adjust the radius as needed for the circle

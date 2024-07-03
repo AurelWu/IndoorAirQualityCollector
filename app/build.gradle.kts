@@ -10,8 +10,8 @@ android {
         applicationId = "com.aurelwu.indoorairqualitycollector"
         minSdk = 28
         targetSdk = 34
-        versionCode = 18
-        versionName = "18.0"
+        versionCode = 19
+        versionName = "19.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

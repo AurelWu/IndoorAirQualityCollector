@@ -24,8 +24,8 @@ public class ApiGatewayCaller {
 
 
 
-        public NetworkTask() {;
-;
+        public NetworkTask() {
+
         }
 
         @Override
@@ -79,11 +79,11 @@ public class ApiGatewayCaller {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            if(successState=="success")
+            if(successState.equals("success"))
             {
                 mainActivity.OnTransmissionSuccess();
             }
-            else if(successState=="failure")
+            else if(successState.equals("failure"))
             {
                 mainActivity.OnTransmissionFail("Transmission failed, try again!");
             }

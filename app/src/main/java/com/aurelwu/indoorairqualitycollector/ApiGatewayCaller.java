@@ -10,6 +10,7 @@ import java.util.concurrent.TimeUnit;
 public class ApiGatewayCaller {
 
     public static String successState;
+    public static boolean manualMode;
     public static MainActivity mainActivity;
 
     // Modify sendJsonToApiGateway to accept callback
@@ -45,13 +46,28 @@ public class ApiGatewayCaller {
 
                 OkHttpClient client = clientBuilder.build();
 
-                // Create POST request
-                Request request = new Request.Builder()
-                        //.url("https://06hnj7diuj.execute-api.eu-central-1.amazonaws.com/Standard/ProcessCO2Data")
+                Request request = null;
+
+                if(!manualMode)
+                {
+                    request = new Request.Builder()
+                            //.url("https://06hnj7diuj.execute-api.eu-central-1.amazonaws.com/Standard/ProcessCO2Data")
                             .url("https://wzugdkxj15.execute-api.eu-central-1.amazonaws.com/Standard/CO2")
-                        //.url("https://sqs.eu-central-1.amazonaws.com/142160159144/co2measuredata")
-                        .post(requestBody)
-                        .build();
+                            //.url("https://sqs.eu-central-1.amazonaws.com/142160159144/co2measuredata")
+                            .post(requestBody)
+                            .build();
+                }
+                else
+                {
+                    request = new Request.Builder()
+                            //.url("https://06hnj7diuj.execute-api.eu-central-1.amazonaws.com/Standard/ProcessCO2Data")
+                            .url("https://40zfjhm5tg.execute-api.eu-central-1.amazonaws.com/SendManualCO2Data")
+                            //.url("https://sqs.eu-central-1.amazonaws.com/142160159144/co2measuredata")
+                            .post(requestBody)
+                            .build();
+                }
+                // Create POST request
+
 
                 // Execute request
                 Response response = client.newCall(request).execute();

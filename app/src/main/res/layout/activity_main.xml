@@ -9,511 +9,579 @@
     android:scaleX="1"
     tools:context=".MainActivity">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="117dp">
+        android:fitsSystemWindows="true"
+        android:isScrollContainer="false">
+
 
         <LinearLayout
-            android:id="@+id/LinearLayoutTitleBar"
-            android:layout_width="match_parent"
-            android:layout_height="17pt"
-            android:layout_marginHorizontal="0px"
-            android:background="#77A6AC"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:autoSizeMaxTextSize="24sp"
-                android:autoSizeMinTextSize="12sp"
-                android:autoSizeTextType="uniform"
-                android:gravity="center_vertical"
-                android:text="Status Overview"
-                android:textAlignment="center"
-                android:textColor="#FFFFFF" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/LinearLayoutStatusButtons"
-            android:layout_width="match_parent"
-            android:layout_height="32pt"
-            android:layout_marginHorizontal="0px"
-            android:background="#77A6AC"
-            android:orientation="horizontal">
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="8px"
-                android:layout_marginLeft="8px"
-                android:layout_marginTop="8px"
-                android:layout_marginRight="4px"
-                android:layout_marginBottom="8px"
-                android:layout_weight="1"
-                android:background="#000000">
-
-                <ImageButton
-                    android:id="@+id/imageButtonGPS"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:onClick="OnButtonClickGPS"
-                    android:scaleX="2.5"
-                    android:scaleY="2.5"
-                    app:srcCompat="@drawable/icon_gps" />
-            </FrameLayout>
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="8px"
-                android:layout_marginVertical="8px"
-                android:layout_marginLeft="4px"
-                android:layout_marginTop="8px"
-                android:layout_marginRight="4px"
-                android:layout_marginBottom="8px"
-                android:layout_weight="1"
-                android:background="#000000">
-
-                <ImageButton
-                    android:id="@+id/buttonLocationPermissionStatus"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:onClick="OnButtonClickLocationPermission"
-                    android:scaleX="2.5"
-                    android:scaleY="2.5"
-                    app:srcCompat="@drawable/icon_location" />
-            </FrameLayout>
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="8px"
-                android:layout_marginLeft="4px"
-                android:layout_marginTop="8px"
-                android:layout_marginRight="4px"
-                android:layout_marginBottom="8px"
-                android:layout_weight="1"
-                android:background="#000000">
-
-                <ImageButton
-                    android:id="@+id/buttonBluetoothStatus"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:onClick="OnButtonClickBluetooth"
-                    android:scaleX="2.5"
-                    android:scaleY="2.5"
-                    app:srcCompat="@drawable/icon_bt_status" />
-            </FrameLayout>
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="8px"
-                android:layout_marginLeft="4px"
-                android:layout_marginTop="8px"
-                android:layout_marginRight="4px"
-                android:layout_marginBottom="8px"
-                android:layout_weight="1"
-                android:background="#000000">
-
-                <ImageButton
-                    android:id="@+id/buttonBluetoothScanPermission"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:onClick="OnButtonBTScanPermission"
-                    android:scaleX="2.5"
-                    android:scaleY="2.5"
-                    app:srcCompat="@drawable/icon_bt_scan" />
-            </FrameLayout>
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="8px"
-                android:layout_marginLeft="4px"
-                android:layout_marginTop="8px"
-                android:layout_marginRight="8px"
-                android:layout_marginBottom="8px"
-                android:layout_weight="1"
-                android:background="#000000">
-
-                <ImageButton
-                    android:id="@+id/imageButtonBluetoothConnectPermission"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:onClick="OnButtonBTConnectPermission"
-                    android:scaleX="2.5"
-                    android:scaleY="2.5"
-                    app:srcCompat="@drawable/icon_bt_connect" />
-            </FrameLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/LinearLayoutStatus"
-            android:layout_width="match_parent"
-            android:layout_height="22pt"
-            android:layout_marginHorizontal="10px"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/textViewStatus"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="TextView"
-                android:textColor="#FFFFFF" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/LinearLayoutSensorStatus"
-            android:layout_width="match_parent"
-            android:layout_height="22pt"
-            android:layout_marginHorizontal="10px"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/textViewSensorStatus"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="Sensor Status:"
-                android:textAlignment="textStart"
-                android:textColor="#FFFFFF"
-                android:textSize="14sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/LinearLayoutLocationStatus"
-            android:layout_width="match_parent"
-            android:layout_height="16pt"
-            android:layout_marginHorizontal="10px"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/textViewLocationStatus"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:onClick="OnShowExactLocation"
-                android:text="TextView"
-                android:textColor="#FFFFFF" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/LinearLayoutSearchRange"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="10px"
-            android:orientation="horizontal"
-            android:paddingBottom="4dp">
+            android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/textViewSearchRange"
-                android:layout_width="103dp"
-                android:layout_height="match_parent"
-                android:layout_weight=".5"
-                android:gravity="center"
-                android:text="Search Range:"
-                android:textColor="#FFFFFF" />
 
-            <RadioGroup
+            <LinearLayout
+                android:id="@+id/LinearLayoutTitleBar"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:layout_height="17pt"
+                android:layout_marginHorizontal="0px"
+                android:background="#77A6AC"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:autoSizeMaxTextSize="24sp"
+                    android:autoSizeMinTextSize="12sp"
+                    android:autoSizeTextType="uniform"
+                    android:gravity="center_vertical"
+                    android:text="Status Overview"
+                    android:textAlignment="center"
+                    android:textColor="#FFFFFF"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/LinearLayoutStatusButtons"
+                android:layout_width="match_parent"
+                android:layout_height="32pt"
+                android:layout_marginHorizontal="0px"
+                android:background="#77A6AC"
                 android:orientation="horizontal">
 
-
-                <RadioButton
-                    android:id="@+id/radioButtonSearchRange50m"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="8px"
+                    android:layout_marginLeft="8px"
+                    android:layout_marginTop="8px"
+                    android:layout_marginRight="4px"
+                    android:layout_marginBottom="8px"
                     android:layout_weight="1"
-                    android:text="50m"
-                    android:textColor="#FFFFFF" />
+                    android:background="#000000">
 
-                <RadioButton
-                    android:id="@+id/radioButtonSearchRange100m"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    <ImageButton
+                        android:id="@+id/imageButtonGPS"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:onClick="OnButtonClickGPS"
+                        android:scaleX="2.5"
+                        android:scaleY="2.5"
+                        app:srcCompat="@drawable/icon_gps" />
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="8px"
+                    android:layout_marginVertical="8px"
+                    android:layout_marginLeft="4px"
+                    android:layout_marginTop="8px"
+                    android:layout_marginRight="4px"
+                    android:layout_marginBottom="8px"
                     android:layout_weight="1"
-                    android:enabled="true"
-                    android:saveEnabled="false"
-                    android:text="100m"
-                    android:textColor="#FFFFFF" />
+                    android:background="#000000">
 
-                <RadioButton
-                    android:id="@+id/radioButtonSearchRange250m"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    <ImageButton
+                        android:id="@+id/buttonLocationPermissionStatus"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:onClick="OnButtonClickLocationPermission"
+                        android:scaleX="2.5"
+                        android:scaleY="2.5"
+                        app:srcCompat="@drawable/icon_location" />
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="8px"
+                    android:layout_marginLeft="4px"
+                    android:layout_marginTop="8px"
+                    android:layout_marginRight="4px"
+                    android:layout_marginBottom="8px"
                     android:layout_weight="1"
-                    android:text="250m"
-                    android:textColor="#FFFFFF" />
+                    android:background="#000000">
 
-            </RadioGroup>
+                    <ImageButton
+                        android:id="@+id/buttonBluetoothStatus"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:onClick="OnButtonClickBluetooth"
+                        android:scaleX="2.5"
+                        android:scaleY="2.5"
+                        app:srcCompat="@drawable/icon_bt_status" />
+                </FrameLayout>
 
-        </LinearLayout>
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="8px"
+                    android:layout_marginLeft="4px"
+                    android:layout_marginTop="8px"
+                    android:layout_marginRight="4px"
+                    android:layout_marginBottom="8px"
+                    android:layout_weight="1"
+                    android:background="#000000">
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/buttonUpdateNearbyLocations"
-            style="@style/CustomButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#CAA5DA"
-            android:clickable="true"
-            android:enabled="false"
-            android:onClick="OnButtonClickUpdateLocationSpinner"
-            android:text="Update Nearby Locations"
-            android:textColor="#000000"
-            android:textColorLink="#FFFFFF" />
+                    <ImageButton
+                        android:id="@+id/buttonBluetoothScanPermission"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:onClick="OnButtonBTScanPermission"
+                        android:scaleX="2.5"
+                        android:scaleY="2.5"
+                        app:srcCompat="@drawable/icon_bt_scan" />
+                </FrameLayout>
 
-        <LinearLayout
-            android:id="@+id/LinearLayoutLocationSelector"
-            android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:layout_marginHorizontal="10px"
-            android:orientation="horizontal">
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="8px"
+                    android:layout_marginLeft="4px"
+                    android:layout_marginTop="8px"
+                    android:layout_marginRight="8px"
+                    android:layout_marginBottom="8px"
+                    android:layout_weight="1"
+                    android:background="#000000">
 
-            <TextView
-                android:id="@+id/textViewLocationSelectionText"
+                    <ImageButton
+                        android:id="@+id/imageButtonBluetoothConnectPermission"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:onClick="OnButtonBTConnectPermission"
+                        android:scaleX="2.5"
+                        android:scaleY="2.5"
+                        app:srcCompat="@drawable/icon_bt_connect" />
+                </FrameLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/LinearLayoutStatus"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="3"
-                android:gravity="center"
-                android:text="Select Location: "
-                android:textColor="#FFFFFF" />
+                android:layout_height="22pt"
+                android:layout_marginHorizontal="10px"
+                android:orientation="horizontal">
 
-            <Spinner
-                android:id="@+id/spinnerSelectLocation"
+                <TextView
+                    android:id="@+id/textViewStatus"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="TextView"
+                    android:textColor="#FFFFFF" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/LinearLayoutSensorStatus"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1" />
+                android:layout_height="22pt"
+                android:layout_marginHorizontal="10px"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textViewSensorStatus"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="Sensor Status:"
+                    android:textAlignment="textStart"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/LinearLayoutLocationStatus"
+                android:layout_width="match_parent"
+                android:layout_height="16pt"
+                android:layout_marginHorizontal="10px"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textViewLocationStatus"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:onClick="OnShowExactLocation"
+                    android:text="TextView"
+                    android:textColor="#FFFFFF" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/LinearLayoutSearchRange"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10px"
+                android:orientation="horizontal"
+                android:paddingBottom="4dp">
+
+                <TextView
+                    android:id="@+id/textViewSearchRange"
+                    android:layout_width="103dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight=".5"
+                    android:gravity="center"
+                    android:text="Search Range:"
+                    android:textColor="#FFFFFF" />
+
+                <RadioGroup
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
 
 
-        </LinearLayout>
+                    <RadioButton
+                        android:id="@+id/radioButtonSearchRange50m"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="50m"
+                        android:textColor="#FFFFFF" />
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/buttonStartRecording"
-            style="@style/CustomButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#CAA5DA"
-            android:enabled="false"
-            android:onClick="OnStartRecordingButton"
-            android:text="Start Recording"
-            android:textColor="#000000"
-            android:textColorLink="#FFFFFF"
-            android:textSize="24sp" />
+                    <RadioButton
+                        android:id="@+id/radioButtonSearchRange100m"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:enabled="true"
+                        android:saveEnabled="false"
+                        android:text="100m"
+                        android:textColor="#FFFFFF" />
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="30px" />
+                    <RadioButton
+                        android:id="@+id/radioButtonSearchRange250m"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="250m"
+                        android:textColor="#FFFFFF" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/ConstraintLayoutShowMap"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="16px">
+                </RadioGroup>
+
+            </LinearLayout>
 
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/buttonOpenMapInBrowser"
+                android:id="@+id/buttonUpdateNearbyLocations"
                 style="@style/CustomButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="32dp"
                 android:background="#CAA5DA"
-                android:onClick="OnOpenMapInBrowser"
-                android:text="Open Map in Browser"
+                android:clickable="true"
+                android:enabled="false"
+                android:onClick="OnButtonClickUpdateLocationSpinner"
+                android:text="Update Nearby Locations"
                 android:textColor="#000000"
-                android:textColorLink="#FFFFFF"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.84000003"
-                tools:layout_editor_absoluteX="16dp" />
+                android:textColorLink="#FFFFFF" />
+
+            <LinearLayout
+                android:id="@+id/LinearLayoutLocationSelector"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:layout_marginHorizontal="10px"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textViewLocationSelectionText"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:gravity="center"
+                    android:text="Select Location: "
+                    android:textColor="#FFFFFF" />
+
+                <Spinner
+                    android:id="@+id/spinnerSelectLocation"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
+
+
+            </LinearLayout>
 
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/buttonImpressum"
+                android:id="@+id/buttonStartRecording"
                 style="@style/CustomButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#CAA5DA"
-                android:onClick="OnOpenImprint"
-                android:text="Imprint / Data Protection Statement"
+                android:enabled="false"
+                android:onClick="OnStartRecordingButton"
+                android:text="Start Recording"
                 android:textColor="#000000"
                 android:textColorLink="#FFFFFF"
-                app:layout_constraintBottom_toBottomOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <LinearLayout
-            android:id="@+id/linearLayoutEndRecording"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:visibility="gone">
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/buttonFinishRecording"
-                style="@style/CustomButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="4"
-                android:background="#CAA5DA"
-                android:onClick="OnFinishAndSubmitRecording"
-                android:text="Submit Data"
-                android:textColor="#000000"
-                android:textColorLink="#FFFFFF"
-                android:visibility="visible" />
+                android:textSize="24sp" />
 
             <Space
-                android:layout_width="0px"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="8px"
-                android:layout_weight=".2" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/buttonAbort"
-                style="@style/CustomButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:background="#CAA5DA"
-                android:maxLines="2"
-                android:onClick="OnCancelRecording"
-                android:text="Cancel"
-                android:textColor="#000000"
-                android:textColorLink="#FFFFFF"
-                android:visibility="visible"
-                app:autoSizeTextType="none" />
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/textViewCC0"
-            android:layout_width="match_parent"
-            android:layout_height="22pt"
-            android:text="By submitting you dedicate the measurement to the public domain under the Creative Commons CC0 1.0 Universal Public Domain Dedication"
-            android:visibility="gone" />
-
-        <LinearLayout
-            android:id="@+id/LinearLayoutLineChartContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="10px"
-            android:layout_weight="1"
-            android:orientation="horizontal"
-            android:visibility="gone">
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/LinearLayoutChartRangeSliderContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="10px"
-            android:layout_weight="1"
-            android:orientation="horizontal"
-            android:visibility="gone"></LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/LinearLayoutCheckboxes"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:visibility="gone">
-
-            <CheckBox
-                android:id="@+id/checkBoxWindowsDoors"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Open Windows/Doors"
-                android:textColor="#FFFFFF" />
+                android:layout_marginVertical="30px" />
 
-            <CheckBox
-                android:id="@+id/checkBoxVentilationSystem"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/ConstraintLayoutShowMap"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="16px">
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/buttonStartRecordingManual"
+                    style="@style/CustomButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginBottom="16dp"
+                    android:background="#CAA5DA"
+                    android:clickable="true"
+                    android:enabled="false"
+                    android:onClick="OnStartManualRecording"
+                    android:text="Start Manual Recording (Available after Location Update)"
+                    android:textColor="#000000"
+                    android:textColorLink="#FFFFFF"
+                    android:autoSizeMinTextSize="14dp"
+                    android:autoSizeMaxTextSize="24dp"
+                    app:layout_constraintBottom_toTopOf="@+id/buttonOpenMapInBrowser" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/buttonOpenMapInBrowser"
+                    style="@style/CustomButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="32dp"
+                    android:background="#CAA5DA"
+                    android:onClick="OnOpenMapInBrowser"
+                    android:text="Open Map in Browser"
+                    android:textColor="#000000"
+                    android:textColorLink="#FFFFFF"
+                    android:autoSizeMinTextSize="14dp"
+                    android:autoSizeMaxTextSize="24dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.84000003"
+                    tools:layout_editor_absoluteX="16dp" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/buttonImpressum"
+                    style="@style/CustomButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:background="#CAA5DA"
+                    android:onClick="OnOpenImprint"
+                    android:text="Imprint / Data Protection Statement"
+                    android:textColor="#000000"
+                    android:textColorLink="#FFFFFF"
+                    android:autoSizeMinTextSize="14dp"
+                    android:autoSizeMaxTextSize="24dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/buttonOpenMapInBrowser" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <LinearLayout
+                android:id="@+id/linearLayoutEndRecording"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="VentilationSystem"
-                android:textColor="#FFFFFF" />
+                android:orientation="horizontal"
+                android:visibility="gone">
 
-        </LinearLayout>
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/buttonFinishRecording"
+                    style="@style/CustomButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="4"
+                    android:background="#CAA5DA"
+                    android:onClick="OnFinishAndSubmitRecording"
+                    android:text="Submit Data"
+                    android:textColor="#000000"
+                    android:textColorLink="#FFFFFF"
+                    android:visibility="visible" />
 
-        <LinearLayout
-            android:id="@+id/LinearLayoutOccupancy"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:visibility="gone">
+                <Space
+                    android:layout_width="0px"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="8px"
+                    android:layout_weight=".2" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/buttonAbort"
+                    style="@style/CustomButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:background="#CAA5DA"
+                    android:maxLines="2"
+                    android:onClick="OnCancelRecording"
+                    android:text="Cancel"
+                    android:textColor="#000000"
+                    android:textColorLink="#FFFFFF"
+                    android:visibility="visible"
+                    app:autoSizeTextType="none" />
+            </LinearLayout>
 
             <TextView
-                android:id="@+id/textView5"
-                android:layout_width="80dp"
-                android:layout_height="match_parent"
+                android:id="@+id/textViewCC0"
+                android:layout_width="match_parent"
+                android:layout_height="22pt"
+                android:text="By submitting you dedicate the measurement to the public domain under the Creative Commons CC0 1.0 Universal Public Domain Dedication"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:id="@+id/LinearLayoutLineChartContainer"
+                android:layout_width="match_parent"
+                android:layout_height="400px"
+                android:layout_marginHorizontal="10px"
                 android:layout_weight="1"
-                android:gravity="center"
-                android:text="Occupancy" />
+                android:orientation="horizontal"
+                android:visibility="gone">
 
-            <RadioGroup
+            </LinearLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/TextInputManualName"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="50"
-                android:orientation="horizontal">
+                android:textColorHint="#FFFFFF"
+                tools:visibility="gone">
 
-                <RadioButton
-                    android:id="@+id/radioButtonLowOccupancy"
-                    android:layout_width="wrap_content"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/TextInputEditTextManualName"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="start|top"
+                    android:hint="enter Location Name (mandatory)"
+                    android:inputType="textMultiLine"
+                    android:maxLength="1000"
+                    android:textColor="#FFFFFF" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/TextInputManualAddress"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColorHint="#FFFFFF"
+                tools:visibility="gone">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/TextInputEditTextManualAddress"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="start|top"
+                    android:hint="enter Location Address (mandatory)"
+                    android:inputType="textMultiLine"
+                    android:maxLength="1000"
+                    android:textColor="#FFFFFF" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <LinearLayout
+                android:id="@+id/LinearLayoutChartRangeSliderContainer"
+                android:layout_width="match_parent"
+                android:layout_height="250px"
+                android:layout_marginHorizontal="10px"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:visibility="gone"></LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/LinearLayoutCheckboxes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <CheckBox
+                    android:id="@+id/checkBoxWindowsDoors"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="5"
-                    android:text="low"
+                    android:layout_weight="1"
+                    android:text="Open Windows/Doors"
                     android:textColor="#FFFFFF" />
 
-                <RadioButton
-                    android:id="@+id/radioButtonMediumOccupancy"
-                    android:layout_width="wrap_content"
+                <CheckBox
+                    android:id="@+id/checkBoxVentilationSystem"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="5"
-                    android:text="medium"
+                    android:layout_weight="1"
+                    android:text="VentilationSystem"
                     android:textColor="#FFFFFF" />
 
-                <RadioButton
-                    android:id="@+id/radioButtonHighOccupancy"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="5"
-                    android:text="high"
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/LinearLayoutOccupancy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/textView5"
+                    android:layout_width="80dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="Occupancy" />
+
+                <RadioGroup
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="50"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/radioButtonLowOccupancy"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="5"
+                        android:text="low"
+                        android:textColor="#FFFFFF" />
+
+                    <RadioButton
+                        android:id="@+id/radioButtonMediumOccupancy"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="5"
+                        android:text="medium"
+                        android:textColor="#FFFFFF" />
+
+                    <RadioButton
+                        android:id="@+id/radioButtonHighOccupancy"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="5"
+                        android:text="high"
+                        android:textColor="#FFFFFF" />
+                </RadioGroup>
+            </LinearLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/TextInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColorHint="#FFFFFF"
+                tools:visibility="gone">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/TextInputEditTextNotes"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="start|top"
+                    android:hint="enter additional info (optional)"
+                    android:inputType="textMultiLine"
+                    android:maxLength="1000"
                     android:textColor="#FFFFFF" />
-            </RadioGroup>
+            </com.google.android.material.textfield.TextInputLayout>
+
         </LinearLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/TextInputLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColorHint="#FFFFFF"
-            tools:visibility="gone">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/TextInputEditTextNotes"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="start|top"
-                android:hint="enter additional info (optional)"
-                android:inputType="textMultiLine"
-                android:maxLength="1000"
-                android:textColor="#FFFFFF" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-    </LinearLayout>
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

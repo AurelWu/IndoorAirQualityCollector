@@ -41,6 +41,8 @@ import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
 
+    private boolean manualTransmissionMode = false;
+    private boolean enableManualRecordingButton = false;
     private boolean showExactLocation = false;
     //private PowerManager.WakeLock wakeLock;
     ImageButton buttonGPSStatus;
@@ -50,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
     ImageButton buttonBluetoothScanPermission;
     ImageButton buttonBluetoothConnectPermission;
     AppCompatButton buttonStartRecording;
+
+    AppCompatButton buttonStartManualRecording;
     AppCompatButton buttonFinishRecording;
 
     AppCompatButton buttonCancelRecording;
@@ -97,7 +101,11 @@ public class MainActivity extends AppCompatActivity {
     LinearLayout layoutStopRecording;
     LinearLayout layoutCheckboxes;
     TextInputLayout textInputLayoutCustomNotes;
+    TextInputLayout textInputLayoutManualName;
+    TextInputLayout textInputLayoutManualAddress;
     TextInputEditText textInputEditTextCustomNotes;
+    TextInputEditText textInputEditTextManualName;
+    TextInputEditText textInputEditTextManualAddress;
     LinearLayout layoutOccupancy;
 
     LinearLayout chartContainer;
@@ -151,6 +159,7 @@ public class MainActivity extends AppCompatActivity {
         textViewSensorStatus = findViewById(R.id.textViewSensorStatus);
         textViewLocationStatus = findViewById(R.id.textViewLocationStatus);
         buttonStartRecording = findViewById(R.id.buttonStartRecording);
+        buttonStartManualRecording = findViewById(R.id.buttonStartRecordingManual);
         buttonFinishRecording = findViewById(R.id.buttonFinishRecording);
         radioButton50mRange = findViewById(R.id.radioButtonSearchRange50m);
         radioButton100mRange = findViewById(R.id.radioButtonSearchRange100m);
@@ -195,8 +204,21 @@ public class MainActivity extends AppCompatActivity {
 
         textInputLayoutCustomNotes = findViewById((R.id.TextInputLayout));
         textInputLayoutCustomNotes.setVisibility(View.GONE);
-
         textInputEditTextCustomNotes = findViewById(R.id.TextInputEditTextNotes);
+
+        textInputLayoutManualName = findViewById(R.id.TextInputManualName);
+        textInputLayoutManualName.setVisibility(View.GONE);
+        textInputEditTextManualName = findViewById(R.id.TextInputEditTextManualName);
+
+        textInputLayoutManualAddress = findViewById(R.id.TextInputManualAddress);
+        textInputLayoutManualAddress.setVisibility(View.GONE);
+        textInputEditTextManualAddress = findViewById(R.id.TextInputEditTextManualAddress);
+
+
+
+
+
+
 
         layoutOccupancy = findViewById(R.id.LinearLayoutOccupancy);
         buttonCancelRecording = findViewById(R.id.buttonAbort);
@@ -204,6 +226,10 @@ public class MainActivity extends AppCompatActivity {
 
         locationSpinner = findViewById(R.id.spinnerSelectLocation);
 
+        buttonStartManualRecording.setEnabled(false);
+        buttonStartManualRecording.setBackgroundColor(buttonColorDisabled);
+        buttonStartManualRecording.setTextColor(Color.LTGRAY);
+        buttonStartManualRecording.setTextColor(Color.LTGRAY);
         buttonUpdateNearByLocations.setBackgroundColor(buttonColorEnabled);
         buttonFinishRecording.setBackgroundColor(buttonColorEnabled);
         buttonOpenMapInBrowser.setBackgroundColor(buttonColorEnabled);
@@ -214,6 +240,8 @@ public class MainActivity extends AppCompatActivity {
         UIUpdater.postDelayed(Update, 100);
 
         logic.spatialManager.searchRadius = searchRadius;
+
+
 
         ColorDrawable backgroundDrawable = new ColorDrawable(0xFF444444); // Dark grey color
         //locationSpinner.setBackgroundColor(0xFF444444);
@@ -237,7 +265,7 @@ public class MainActivity extends AppCompatActivity {
     {
 
 
-
+        manualTransmissionMode=false;
         transmissionState = "none";
         selectedLocation = (LocationData)locationSpinner.getSelectedItem();
         if(selectedLocation==null)
@@ -252,6 +280,7 @@ public class MainActivity extends AppCompatActivity {
         //wakeLock.acquire();
 
         //TODO:
+        textInputEditTextCustomNotes.setText("");
         textViewCC0.setVisibility(View.GONE);
         buttonFinishRecording.setEnabled(false);
         buttonFinishRecording.setBackgroundColor(buttonColorDisabled);
@@ -282,20 +311,24 @@ public class MainActivity extends AppCompatActivity {
 
     public void OnFinishAndSubmitRecording(View view)
     {
-        logic.FinishRecording(checkBoxWindowsDoors.isChecked(),checkBoxVentilationSystem.isChecked(),occupancyLevel,textInputEditTextCustomNotes.getText().toString());
-        chartRangeSlider.getMinValue();
-        String json = logic.GenerateJSONToTransmit(chartRangeSlider.getMinValue(),chartRangeSlider.getMaxValue());
+        logic.FinishRecording(checkBoxWindowsDoors.isChecked(),checkBoxVentilationSystem.isChecked(),occupancyLevel,textInputEditTextCustomNotes.getText().toString(), textInputEditTextManualName.getText().toString(),textInputEditTextManualAddress.getText().toString(), manualTransmissionMode);
+        //chartRangeSlider.getMinValue();
         transmissionState = "none";
         buttonFinishRecording.setEnabled(false);
         buttonFinishRecording.setBackgroundColor(buttonColorDisabled);
         buttonFinishRecording.setTextColor(Color.LTGRAY);
         buttonFinishRecording.setText(("Submitting"));
-        ApiGatewayCaller.sendJsonToApiGateway(json,this);
 
-        //// Release the wakelock
-        //if (wakeLock != null && wakeLock.isHeld()) {
-        //    wakeLock.release();
-        //}
+        if(!manualTransmissionMode)
+        {
+            String json = logic.GenerateJSONToTransmit(chartRangeSlider.getMinValue(),chartRangeSlider.getMaxValue());
+            ApiGatewayCaller.sendJsonToApiGateway(json,this);
+        }
+        else if(manualTransmissionMode)
+        {
+            String json = logic.GenerateManualModeJSONToTransmit(chartRangeSlider.getMinValue(),chartRangeSlider.getMaxValue());
+            ApiGatewayCaller.sendJsonToApiGateway(json,this);
+        }
     }
 
     public void OnTransmissionSuccess()
@@ -333,7 +366,8 @@ public class MainActivity extends AppCompatActivity {
         }
         else
         {
-            logic.FinishRecording(checkBoxWindowsDoors.isChecked(),checkBoxVentilationSystem.isChecked(),occupancyLevel,textInputEditTextCustomNotes.getText().toString());
+            logic.aranetManager.FinishRecording();
+            //logic.FinishRecording(checkBoxWindowsDoors.isChecked(),checkBoxVentilationSystem.isChecked(),occupancyLevel,textInputEditTextCustomNotes.getText().toString());
             OnStopRecordingChangeUI();
             //// Release the wakelock
             //if (wakeLock != null && wakeLock.isHeld()) {
@@ -370,6 +404,13 @@ public class MainActivity extends AppCompatActivity {
 
         checkBoxWindowsDoors.setChecked(false);
         checkBoxVentilationSystem.setChecked(false);
+        enableManualRecordingButton = false;
+        buttonStartManualRecording.setEnabled(false);
+        buttonStartManualRecording.setBackgroundColor(buttonColorDisabled);
+        buttonStartManualRecording.setTextColor(Color.LTGRAY);
+        buttonStartManualRecording.setText("Start Manual Recording (Available after Location Update)");
+        textInputLayoutManualAddress.setVisibility(View.GONE);
+        textInputLayoutManualName.setVisibility(View.GONE);
     }
 
 
@@ -391,12 +432,14 @@ public class MainActivity extends AppCompatActivity {
         //buttonUpdateNearByLocations.setEnabled(true);
         //buttonUpdateNearByLocations.setBackgroundColor(Color.MAGENTA);
         isUpdatingLocations = false;
+        enableManualRecordingButton = true;
     }
 
     public void UpdateLocationSelectionSpinner()
     {
         ArrayList<String> defaultMessageList = new ArrayList<>();
         defaultMessageList.add("No Locations found, search again");
+
         if(!invalidateLocations) return;
         ArrayAdapter<LocationData> adapter = new LocationDataAdapter(this, logic.spatialManager.overpassModule.locationData);
         adapter.setDropDownViewResource(R.layout.custom_spinner_item);
@@ -406,7 +449,7 @@ public class MainActivity extends AppCompatActivity {
         if(logic.spatialManager.overpassModule.locationData.isEmpty())
         {
             locationSpinner.setEnabled(false);
-            ArrayAdapter<String> emptyAdapter = new ArrayAdapter<String>(this,R.layout.custom_spinner_item,defaultMessageList);
+            ArrayAdapter<String> emptyAdapter = new ArrayAdapter<String>(this, androidx.appcompat.R.layout.support_simple_spinner_dropdown_item,defaultMessageList);
         }
 
         invalidateLocations=false;
@@ -439,6 +482,13 @@ public class MainActivity extends AppCompatActivity {
 
     private void UpdateUIElements()
     {
+        if(enableManualRecordingButton)
+        {
+            buttonStartManualRecording.setEnabled(true);
+            buttonStartManualRecording.setTextColor(Color.BLACK);
+            buttonStartManualRecording.setText("Start Manual Recording");
+            buttonStartManualRecording.setBackgroundColor(buttonColorEnabled);
+        }
         UpdateLocationSelectionSpinner();
         GPSEnabled = logic.spatialManager.isGPSEnabled();
         bluetoothEnabled = logic.bluetoothManager.IsBluetoothEnabled();
@@ -619,21 +669,58 @@ public class MainActivity extends AppCompatActivity {
                 lineChartView.setData(co2Data);
                 chartRangeSlider.SetDataRange(co2Data.length);
             //}
+            if(!manualTransmissionMode)
+            {
+                if(co2Data.length<5 || (chartRangeSlider.getMaxValue()-chartRangeSlider.getMinValue() <4))
+                {
+                    buttonFinishRecording.setEnabled(false);
+                    buttonFinishRecording.setBackgroundColor(buttonColorDisabled);
+                    buttonFinishRecording.setTextColor(Color.LTGRAY);
+                    buttonFinishRecording.setText("Submit (needs 5 minutes of Data)");
+                }
+                else
+                {
+                    buttonFinishRecording.setEnabled(true);
+                    buttonFinishRecording.setBackgroundColor(buttonColorEnabled);
+                    buttonFinishRecording.setTextColor(Color.BLACK);
+                    buttonFinishRecording.setText("Submit Data");
+                }
+            }
+            else //is manual transmission Mode
+            {
+                Boolean anyConditionsMissing = false;
 
-            if(co2Data.length<5 || (chartRangeSlider.getMaxValue()-chartRangeSlider.getMinValue() <4))
-            {
-                buttonFinishRecording.setEnabled(false);
-                buttonFinishRecording.setBackgroundColor(buttonColorDisabled);
-                buttonFinishRecording.setTextColor(Color.LTGRAY);
-                buttonFinishRecording.setText("Submit (needs 5 minutes of Data)");
+                if(co2Data.length<5 || (chartRangeSlider.getMaxValue()-chartRangeSlider.getMinValue() <4))
+                {
+                        buttonFinishRecording.setText("Submit Data (needs 5 Minutes of Data");
+                        buttonFinishRecording.setEnabled(false);
+                        buttonFinishRecording.setBackgroundColor(buttonColorDisabled);
+                        buttonFinishRecording.setTextColor(Color.LTGRAY);
+                        anyConditionsMissing=true;
+                }
+                else if(textInputEditTextManualName.getText().toString().length() <1)
+                {
+                    buttonFinishRecording.setText("Submit Data (needs Location Name)");
+                    buttonFinishRecording.setEnabled(false);
+                    buttonFinishRecording.setBackgroundColor(buttonColorDisabled);
+                    buttonFinishRecording.setTextColor(Color.LTGRAY);
+                }
+                else if(textInputEditTextManualAddress.getText().toString().length() <1)
+                {
+                    buttonFinishRecording.setText("Submit Data (needs Location Address)");
+                    buttonFinishRecording.setEnabled(false);
+                    buttonFinishRecording.setBackgroundColor(buttonColorDisabled);
+                    buttonFinishRecording.setTextColor(Color.LTGRAY);
+                }
+                else
+                {
+                    buttonFinishRecording.setEnabled(true);
+                    buttonFinishRecording.setBackgroundColor(buttonColorEnabled);
+                    buttonFinishRecording.setTextColor(Color.BLACK);
+                    buttonFinishRecording.setText("Submit Data");
+                }
             }
-            else
-            {
-                buttonFinishRecording.setEnabled(true);
-                buttonFinishRecording.setBackgroundColor(buttonColorEnabled);
-                buttonFinishRecording.setTextColor(Color.BLACK);
-                buttonFinishRecording.setText("Submit Data");
-            }
+
         }
         if(transmissionState == "failure")
         {
@@ -665,6 +752,11 @@ public class MainActivity extends AppCompatActivity {
             if(timeDifference >= 60001)
             {
                 logic.aranetManager.Update(); //This
+                if(manualTransmissionMode)
+                {
+                    logic.submissionDataManual.LongitudeData.add(logic.spatialManager.myLongitude);
+                    logic.submissionDataManual.LatitudeData.add((logic.spatialManager.myLatitude));
+                }
                 lastTimestamp = System.currentTimeMillis();
             }
             timeToNextUpdate=(60000-timeDifference)/1000;
@@ -721,6 +813,40 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     };
+
+    public void OnStartManualRecording(View view)
+    {
+        transmissionState = "none";
+        manualTransmissionMode=true;
+        textViewCC0.setVisibility(View.GONE);
+        buttonFinishRecording.setEnabled(false);
+        buttonFinishRecording.setBackgroundColor(buttonColorDisabled);
+        layoutStopRecording.setVisibility(View.VISIBLE);
+        layoutSearchRangeSelection.setVisibility(View.GONE);
+        layoutLocationSelection.setVisibility(View.GONE);
+        buttonStartRecording.setVisibility(View.GONE);
+        buttonUpdateNearByLocations.setVisibility(View.GONE);
+        chartContainer.setVisibility(View.VISIBLE);
+        chartRangeSliderContainer.setVisibility(View.VISIBLE);
+        lineChartView.setVisibility(View.VISIBLE);
+        lineChartView.invalidate();
+        layoutCheckboxes.setVisibility(View.VISIBLE);
+        textInputLayoutCustomNotes.setVisibility(View.VISIBLE);
+        //layoutOccupancy.setVisibility(View.VISIBLE);
+        layoutOccupancy.setVisibility(View.GONE); // For now we won't track this, its subjective anyways and less UI Elements = better
+        buttonOpenMapInBrowser.setVisibility(View.GONE);
+        buttonImpressumDataProtection.setVisibility(View.GONE);
+        constraintLayoutMap.setVisibility(View.GONE);
+        chartRangeSlider.ReInit();
+
+        logic.StartNewManualRecording(System.currentTimeMillis());
+        checkBoxVentilationSystem.setChecked(false);
+        checkBoxWindowsDoors.setChecked(false);
+        occupancyLevel = "undefined";
+        textInputLayoutManualName.setVisibility(View.VISIBLE);
+        textInputLayoutManualAddress.setVisibility(View.VISIBLE);
+        //display a popup telling people to only use this in emergencies
+    }
 
     public void OnOpenMapInBrowser(View view)
     {

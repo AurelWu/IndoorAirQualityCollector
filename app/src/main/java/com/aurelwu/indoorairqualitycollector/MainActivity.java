@@ -1,6 +1,7 @@
 package com.aurelwu.indoorairqualitycollector;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -23,6 +24,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.ListPopupWindow;
@@ -119,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
 
     AppCompatButton buttonOpenMapInBrowser;
     AppCompatButton buttonImpressumDataProtection; //links to webpage with this statemenet
-    ConstraintLayout constraintLayoutMap;
+    //ConstraintLayout constraintLayoutMap;
 
     public boolean invalidateLocations = false;
 
@@ -180,7 +182,7 @@ public class MainActivity extends AppCompatActivity {
 
         buttonOpenMapInBrowser = findViewById(R.id.buttonOpenMapInBrowser);
         buttonImpressumDataProtection = findViewById(R.id.buttonImpressum);
-        constraintLayoutMap = findViewById(R.id.ConstraintLayoutShowMap);
+        //constraintLayoutMap = findViewById(R.id.ConstraintLayoutShowMap);
 
 
         layoutLocationSelection = findViewById(R.id.LinearLayoutLocationSelector);
@@ -288,6 +290,7 @@ public class MainActivity extends AppCompatActivity {
         layoutSearchRangeSelection.setVisibility(View.GONE);
         layoutLocationSelection.setVisibility(View.GONE);
         buttonStartRecording.setVisibility(View.GONE);
+        buttonStartManualRecording.setVisibility(View.GONE);
         buttonUpdateNearByLocations.setVisibility(View.GONE);
         chartContainer.setVisibility(View.VISIBLE);
         chartRangeSliderContainer.setVisibility(View.VISIBLE);
@@ -299,7 +302,7 @@ public class MainActivity extends AppCompatActivity {
         layoutOccupancy.setVisibility(View.GONE); // For now we won't track this, its subjective anyways and less UI Elements = better
         buttonOpenMapInBrowser.setVisibility(View.GONE);
         buttonImpressumDataProtection.setVisibility(View.GONE);
-        constraintLayoutMap.setVisibility(View.GONE);
+        //constraintLayoutMap.setVisibility(View.GONE);
         chartRangeSlider.ReInit();
 
         logic.StartNewRecording(selectedLocation.ID,selectedLocation.type, selectedLocation.Name,selectedLocation.latitude,selectedLocation.longitude,System.currentTimeMillis());
@@ -357,26 +360,55 @@ public class MainActivity extends AppCompatActivity {
         }, 2000); // 3000 milliseconds = 3 seconds
     }
 
-    public void OnCancelRecording(View view)
-    {
-        if(!firstCancelStepTriggered)
-        {
-            firstCancelStepTriggered = true;
-            buttonCancelRecording.setText("Confirm Cancel");
-        }
-        else
-        {
-            logic.aranetManager.FinishRecording();
-            //logic.FinishRecording(checkBoxWindowsDoors.isChecked(),checkBoxVentilationSystem.isChecked(),occupancyLevel,textInputEditTextCustomNotes.getText().toString());
-            OnStopRecordingChangeUI();
-            //// Release the wakelock
-            //if (wakeLock != null && wakeLock.isHeld()) {
-            //    wakeLock.release();
-            //}
-            buttonCancelRecording.setText("Cancel");
-            firstCancelStepTriggered = false;
-        }
+    //public void OnCancelRecording(View view)
+    //{
+    //    if(!firstCancelStepTriggered)
+    //    {
+    //        firstCancelStepTriggered = true;
+    //        buttonCancelRecording.setText("Confirm Cancel");
+    //    }
+    //    else
+    //    {
+    //        logic.aranetManager.FinishRecording();
+    //        OnStopRecordingChangeUI();
+    //
+    //        buttonCancelRecording.setText("Cancel");
+    //        firstCancelStepTriggered = false;
+    //    }
+    //
+    //}
 
+    public void OnCancelRecording(View view) {
+        // Create an AlertDialog builder
+        AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+
+        // Set the dialog title and message
+        builder.setTitle("Confirm Cancel");
+        builder.setMessage("Are you sure you want to cancel the recording?");
+
+        // Set the positive button (confirmation)
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which)
+            {
+                logic.aranetManager.FinishRecording();
+
+                OnStopRecordingChangeUI();
+
+            }
+        });
+
+        // Set the negative button (cancellation)
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which)
+            {
+                dialog.dismiss();
+            }
+        });
+
+        // Show the dialog
+        builder.create().show();
     }
 
 
@@ -384,13 +416,14 @@ public class MainActivity extends AppCompatActivity {
     {
         textViewCC0.setVisibility(View.GONE);
         buttonStartRecording.setVisibility(View.VISIBLE);
+        buttonStartManualRecording.setVisibility(View.VISIBLE);
         layoutStopRecording.setVisibility(View.GONE);
         layoutSearchRangeSelection.setVisibility(View.VISIBLE);
         layoutLocationSelection.setVisibility(View.VISIBLE);
         buttonUpdateNearByLocations.setVisibility(View.VISIBLE);
         buttonOpenMapInBrowser.setVisibility(View.VISIBLE);
         buttonImpressumDataProtection.setVisibility(View.VISIBLE);
-        constraintLayoutMap.setVisibility(View.VISIBLE);
+        //constraintLayoutMap.setVisibility(View.VISIBLE);
         chartContainer.setVisibility(View.GONE);
         chartRangeSliderContainer.setVisibility(View.GONE);
         lineChartView.setVisibility(View.GONE);
@@ -623,19 +656,33 @@ public class MainActivity extends AppCompatActivity {
                 {
                     //textViewLocationStatus.setText("Recording data of Location: " + selectedLocation.Name+"\r\n"+ String.format("%.6f", selectedLocation.latitude) + " | " + String.format("%.6f", selectedLocation.longitude ));
                     textViewLocationStatus.setText("Recording data of Location: " + selectedLocation.Name);
+                    if(logic.aranetManager.lastUpdateFailed==true)
+                    {
+                        textViewLocationStatus.append(" | last update not successful (Status: ) " + logic.aranetManager.failureID);
+                    }
                 }
                 else
                 {
                     if(showExactLocation)
                     {
                         textViewLocationStatus.setText(String.format("Lat:" +"%.6f", logic.spatialManager.myLatitude) + " | Lon: " + String.format("%.6f", logic.spatialManager.myLongitude) + " (tap to hide)");
+                        if(logic.aranetManager.lastUpdateFailed==true)
+                        {
+                            textViewLocationStatus.append(" | last update not successful (Status: ) " + logic.aranetManager.failureID);
+                        }
                     }
                     else
                     {
                         textViewLocationStatus.setText(String.format("Lat:" +"%.1f" + "***", logic.spatialManager.myLatitude) + " | Lon: " + String.format("%.1f" + "***", logic.spatialManager.myLongitude) + " (tap to show)");
+                        if(logic.aranetManager.lastUpdateFailed==true)
+                        {
+                            textViewLocationStatus.append(" | last update not successful (Status: ) " + logic.aranetManager.failureID);
+                        }
                     }
 
                 }
+
+
 
                 if(isUpdatingLocations==false)
                 {
@@ -657,6 +704,7 @@ public class MainActivity extends AppCompatActivity {
             if(!GPSEnabled) textViewLocationStatus.append("GPS not enabled ");
             if(!locationPermission) textViewLocationStatus.append("Location Permission missing");
             buttonUpdateNearByLocations.setEnabled(false);
+            buttonUpdateNearByLocations.setTextColor(Color.LTGRAY);
             buttonUpdateNearByLocations.setBackgroundColor(buttonColorDisabled);
         }
 
@@ -814,7 +862,8 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    public void OnStartManualRecording(View view)
+
+    public void OnConfirmedManualRecording(View view)
     {
         transmissionState = "none";
         manualTransmissionMode=true;
@@ -825,6 +874,7 @@ public class MainActivity extends AppCompatActivity {
         layoutSearchRangeSelection.setVisibility(View.GONE);
         layoutLocationSelection.setVisibility(View.GONE);
         buttonStartRecording.setVisibility(View.GONE);
+        buttonStartManualRecording.setVisibility(View.GONE);
         buttonUpdateNearByLocations.setVisibility(View.GONE);
         chartContainer.setVisibility(View.VISIBLE);
         chartRangeSliderContainer.setVisibility(View.VISIBLE);
@@ -836,7 +886,7 @@ public class MainActivity extends AppCompatActivity {
         layoutOccupancy.setVisibility(View.GONE); // For now we won't track this, its subjective anyways and less UI Elements = better
         buttonOpenMapInBrowser.setVisibility(View.GONE);
         buttonImpressumDataProtection.setVisibility(View.GONE);
-        constraintLayoutMap.setVisibility(View.GONE);
+        //constraintLayoutMap.setVisibility(View.GONE);
         chartRangeSlider.ReInit();
 
         logic.StartNewManualRecording(System.currentTimeMillis());
@@ -845,7 +895,29 @@ public class MainActivity extends AppCompatActivity {
         occupancyLevel = "undefined";
         textInputLayoutManualName.setVisibility(View.VISIBLE);
         textInputLayoutManualAddress.setVisibility(View.VISIBLE);
+        textInputEditTextManualAddress.setText("");
+        textInputEditTextManualName.setText("");
         //display a popup telling people to only use this in emergencies
+    }
+
+    public void OnStartManualRecording(View view)
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setMessage("Only use this recording mode if the location is not in the List above or if receiving Locations does not work currently. Recordings in this mode are not put into the map instantly but manually looked at and then added to the Map if the location can be validated. Using this mode the exact GPS Coordinates taken during the recording duration will be submitted at the end!")
+                .setPositiveButton("Understood", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // Perform the confirm action
+                        OnConfirmedManualRecording(view);
+                        dialog.dismiss(); // Close the dialog
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User cancelled the dialog
+                        dialog.dismiss(); // Close the dialog
+                    }
+                });
+        builder.create().show();
     }
 
     public void OnOpenMapInBrowser(View view)

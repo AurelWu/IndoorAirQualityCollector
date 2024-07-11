@@ -63,6 +63,8 @@ public class AranetManager {
 
     public boolean GattModeIsA2DP = false;
 
+    public boolean lastUpdateFailed = false;
+    public int failureID = 0;
     public String GattStatus = "-";
 
     public int totalDataPoints = 0;
@@ -206,7 +208,8 @@ public class AranetManager {
                 Log.d("onServicesDiscovered", "service UUID: " + service.getUuid());
                 if (service != null) {
                     totalDataPoints = 0; //we reset this value to make sure we don't have outdated size
-
+                    lastUpdateFailed = false;
+                    failureID = 0;
                     List<BluetoothGattCharacteristic> x = service.getCharacteristics();
                     liveDataCharacteristic = service.getCharacteristic(ARANET_LIVE_CHARACTERISTIC_UUID);
                     totalDataPointsCharacteristic = service.getCharacteristic(ARANET_TOTAL_READINGS_CHARACTERISTIC_UUID);
@@ -296,17 +299,33 @@ public class AranetManager {
                 if (data != null && data.length == 2) {
                     totalDataPoints = (data[1] << 8) | (data[0] & 0xFF);
                 }
-                long timeDifferenceLocation = System.currentTimeMillis() - timeOfRecordingStart;
-                elapsedMinutes = (short) ((timeDifferenceLocation + 59999) / 60000); // Adding 59999 to ensure rounding up
-                startidx = (short) (totalDataPoints - (0 + elapsedMinutes)); //change value to start with a bit of pre-recording history
-                if (startidx < 0)
+                else
                 {
-                    startidx = 0;
+                    lastUpdateFailed = false;
+                    failureID = 1;
                 }
 
-                writeCharacteristic.setValue(DataArrayBuilder.packDataRequestCO2History(startidx));
-                gatt.writeCharacteristic(writeCharacteristic);
                 Log.d("WriteCharacteristic", "TotalDataPoints: " + String.valueOf(totalDataPoints));
+                if(totalDataPoints!=0)
+                {
+                    long timeDifferenceLocation = System.currentTimeMillis() - timeOfRecordingStart;
+                    elapsedMinutes = (short) ((timeDifferenceLocation + 59999) / 60000); // Adding 59999 to ensure rounding up
+                    startidx = (short) (totalDataPoints - (0 + elapsedMinutes)); //change value to start with a bit of pre-recording history
+                    if (startidx < 0)
+                    {
+                        startidx = 0;
+                    }
+
+                    writeCharacteristic.setValue(DataArrayBuilder.packDataRequestCO2History(startidx));
+                    gatt.writeCharacteristic(writeCharacteristic);
+                }
+                else
+                {
+                    lastUpdateFailed = true;
+                    failureID = 2;
+                }
+
+
             }
             //else if(uuid.equals("f0cd1402-95da-4f4b-9ac8-aa55d312af0c") && status == BluetoothGatt.GATT_SUCCESS)
             //{
@@ -331,9 +350,20 @@ public class AranetManager {
                 short ago = buffer.getShort(5);
                 short startIndex = buffer.getShort(7);
                 byte count = historyDataRaw[9];
+
                 Log.d("HistoryV2Characteristic", "startIndexAsInAranetMessage: " + String.valueOf(startIndex));
                 Log.d("HistoryV2Characteristic", "startIdxSetBeforeByUs: " + startidx);
                 Log.d("HistoryV2Characteristic", "Data Count: " + startidx);
+
+                if(count== 0)
+                {
+                    Log.d("HistoryV2Characteristic", "Data Count: " + startidx + "| skipping updating Data array");
+                    failureID = 3;
+                    gatt.disconnect();
+                    gatt.close();
+                    return;
+                }
+
                 int[] co2dataArray = new int[count];
                 for (int i = 0; i < count; i++) {
                     co2dataArray[i] = (buffer.getShort(10 + (i * 2)));
@@ -374,6 +404,8 @@ public class AranetManager {
             } else {
                 // Write failed
                 System.out.println("Characteristic write failed: " + characteristic.getUuid() + ", status: " + status);
+                lastUpdateFailed = true;
+                failureID = 5;
             }
         }
     };

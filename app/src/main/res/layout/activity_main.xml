@@ -276,7 +276,7 @@
                 android:id="@+id/buttonUpdateNearbyLocations"
                 style="@style/CustomButton"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="48dp"
                 android:background="#CAA5DA"
                 android:clickable="true"
                 android:enabled="false"
@@ -328,63 +328,54 @@
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="30px" />
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/ConstraintLayoutShowMap"
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/buttonStartRecordingManual"
+                style="@style/CustomButton"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="16px">
+                android:layout_height="48dp"
+                android:layout_marginBottom="16dp"
+                android:autoSizeMaxTextSize="24dp"
+                android:autoSizeMinTextSize="14dp"
+                android:background="#CAA5DA"
+                android:clickable="true"
+                android:enabled="false"
+                android:onClick="OnStartManualRecording"
+                android:text="Start Manual Recording (Available after Location Update)"
+                android:textColor="#000000"
+                android:textColorLink="#FFFFFF" />
 
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/buttonStartRecordingManual"
-                    style="@style/CustomButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:layout_marginBottom="16dp"
-                    android:background="#CAA5DA"
-                    android:clickable="true"
-                    android:enabled="false"
-                    android:onClick="OnStartManualRecording"
-                    android:text="Start Manual Recording (Available after Location Update)"
-                    android:textColor="#000000"
-                    android:textColorLink="#FFFFFF"
-                    android:autoSizeMinTextSize="14dp"
-                    android:autoSizeMaxTextSize="24dp"
-                    app:layout_constraintBottom_toTopOf="@+id/buttonOpenMapInBrowser" />
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="30px" />
 
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/buttonOpenMapInBrowser"
-                    style="@style/CustomButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="32dp"
-                    android:background="#CAA5DA"
-                    android:onClick="OnOpenMapInBrowser"
-                    android:text="Open Map in Browser"
-                    android:textColor="#000000"
-                    android:textColorLink="#FFFFFF"
-                    android:autoSizeMinTextSize="14dp"
-                    android:autoSizeMaxTextSize="24dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.84000003"
-                    tools:layout_editor_absoluteX="16dp" />
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/buttonOpenMapInBrowser"
+                style="@style/CustomButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="32dp"
+                android:autoSizeMaxTextSize="24dp"
+                android:autoSizeMinTextSize="14dp"
+                android:background="#CAA5DA"
+                android:onClick="OnOpenMapInBrowser"
+                android:text="Open Map in Browser"
+                android:textColor="#000000"
+                android:textColorLink="#FFFFFF" />
 
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/buttonImpressum"
-                    style="@style/CustomButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:background="#CAA5DA"
-                    android:onClick="OnOpenImprint"
-                    android:text="Imprint / Data Protection Statement"
-                    android:textColor="#000000"
-                    android:textColorLink="#FFFFFF"
-                    android:autoSizeMinTextSize="14dp"
-                    android:autoSizeMaxTextSize="24dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/buttonOpenMapInBrowser" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/buttonImpressum"
+                style="@style/CustomButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:autoSizeMaxTextSize="24dp"
+                android:autoSizeMinTextSize="14dp"
+                android:background="#CAA5DA"
+                android:onClick="OnOpenImprint"
+                android:text="Imprint / Data Protection Statement"
+                android:textColor="#000000"
+                android:textColorLink="#FFFFFF" />
 
             <LinearLayout
                 android:id="@+id/linearLayoutEndRecording"
@@ -578,8 +569,8 @@
                     android:hint="enter additional info (optional)"
                     android:inputType="textMultiLine"
                     android:maxLength="1000"
-                    android:textColor="#FFFFFF" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:textColor="#FFFFFF"/>
+                </com.google.android.material.textfield.TextInputLayout>
 
         </LinearLayout>
     </ScrollView>

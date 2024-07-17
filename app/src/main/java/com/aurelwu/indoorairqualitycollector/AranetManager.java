@@ -131,6 +131,16 @@ public class AranetManager {
             BluetoothDevice device = result.getDevice();
             rssi = result.getRssi();
             txPower = result.getTxPower();
+            String targetDeviceID = UserIDManager.loadTargetDeviceID(mainActivity);
+            if(targetDeviceID.length()>1)
+            {
+                if(!device.getAddress().equals(targetDeviceID))
+                {
+                    Log.d("DeviceTargetID","Device ID does not match");
+                    return;
+                }
+            }
+
             if (device == null && aranetDevice != null) //we didnt find it this time but we already had it before and use it again
             {
                 device = aranetDevice;

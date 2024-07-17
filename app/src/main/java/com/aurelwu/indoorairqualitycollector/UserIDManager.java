@@ -7,6 +7,7 @@ import java.util.UUID;
 public class UserIDManager {
     private static final String PREF_USER_ID = "user_id";
     private static final String PREF_NAME = "IndoorDataCollectorUserID";
+    private static final String TargetDeviceID = "IndoorDataCollectorDeviceID";
 
     public static String getUserID(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
@@ -19,6 +20,21 @@ public class UserIDManager {
         }
 
         return userID;
+    }
+
+    public static void saveTargetDeviceID(Context context, String deviceID)
+    {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(TargetDeviceID, deviceID);
+        editor.apply();
+    }
+
+    public static String loadTargetDeviceID(Context context)
+    {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        String deviceID = sharedPreferences.getString(TargetDeviceID,"");
+        return deviceID;
     }
 
     private static String generateRandomID() {

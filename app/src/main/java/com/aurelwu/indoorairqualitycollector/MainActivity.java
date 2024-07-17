@@ -11,6 +11,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.PowerManager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -21,6 +23,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -47,6 +50,8 @@ public class MainActivity extends AppCompatActivity {
     private boolean enableManualRecordingButton = false;
     private boolean showExactLocation = false;
     //private PowerManager.WakeLock wakeLock;
+    Switch switchAdvancedOptions;
+
     ImageButton buttonGPSStatus;
     ImageButton buttonLocationPermissionStatus;
     ImageButton buttonBluetooth;
@@ -105,6 +110,8 @@ public class MainActivity extends AppCompatActivity {
     TextInputLayout textInputLayoutCustomNotes;
     TextInputLayout textInputLayoutManualName;
     TextInputLayout textInputLayoutManualAddress;
+    TextInputLayout textInputLayoutDeviceID;
+    TextInputEditText textInputEditTextDeviceID;
     TextInputEditText textInputEditTextCustomNotes;
     TextInputEditText textInputEditTextManualName;
     TextInputEditText textInputEditTextManualAddress;
@@ -149,6 +156,8 @@ public class MainActivity extends AppCompatActivity {
         });
 
         logic = new Logic(this);
+
+        switchAdvancedOptions = findViewById(R.id.switchAdvanced);
 
         textViewCC0 = findViewById(R.id.textViewCC0);
         buttonUpdateNearByLocations = findViewById(R.id.buttonUpdateNearbyLocations);
@@ -216,6 +225,9 @@ public class MainActivity extends AppCompatActivity {
         textInputLayoutManualAddress.setVisibility(View.GONE);
         textInputEditTextManualAddress = findViewById(R.id.TextInputEditTextManualAddress);
 
+        textInputEditTextDeviceID = findViewById(R.id.TextInputEditTextSetDevice);
+        textInputLayoutDeviceID = findViewById(R.id.TextInputLayoutSetDeviceID);
+
 
 
 
@@ -242,6 +254,43 @@ public class MainActivity extends AppCompatActivity {
         UIUpdater.postDelayed(Update, 100);
 
         logic.spatialManager.searchRadius = searchRadius;
+
+        textInputEditTextDeviceID.setVisibility(View.GONE);
+        textInputEditTextDeviceID.setText(UserIDManager.loadTargetDeviceID(this));
+
+        switchAdvancedOptions.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                if (isChecked) {
+                    textInputEditTextDeviceID.setVisibility(View.VISIBLE);
+                    textInputLayoutDeviceID.setVisibility(View.VISIBLE);
+                } else {
+                    textInputEditTextDeviceID.setVisibility(View.GONE);
+                    textInputLayoutDeviceID.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        textInputEditTextDeviceID.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                UserIDManager.saveTargetDeviceID(logic.spatialManager.mainActivity,textInputEditTextDeviceID.getText().toString());
+                logic.aranetManager.aranetDevice=null;
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+
+        });
+
 
 
 
@@ -309,6 +358,10 @@ public class MainActivity extends AppCompatActivity {
         checkBoxVentilationSystem.setChecked(false);
         checkBoxWindowsDoors.setChecked(false);
         occupancyLevel = "undefined";
+        textInputLayoutDeviceID.setVisibility(View.GONE);
+        switchAdvancedOptions.setVisibility(View.GONE);
+        textInputLayoutDeviceID.setVisibility(View.GONE);
+        textInputEditTextDeviceID.setVisibility(View.GONE);
 
     }
 
@@ -444,6 +497,17 @@ public class MainActivity extends AppCompatActivity {
         buttonStartManualRecording.setText("Start Manual Recording (Available after Location Update)");
         textInputLayoutManualAddress.setVisibility(View.GONE);
         textInputLayoutManualName.setVisibility(View.GONE);
+        switchAdvancedOptions.setVisibility(View.VISIBLE);
+        if(switchAdvancedOptions.isChecked())
+        {
+            textInputEditTextDeviceID.setVisibility(View.VISIBLE);
+            textInputLayoutDeviceID.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            textInputEditTextDeviceID.setVisibility(View.GONE);
+            textInputLayoutDeviceID.setVisibility(View.GONE);
+        }
     }
 
 
@@ -515,13 +579,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void UpdateUIElements()
     {
-        if(enableManualRecordingButton)
-        {
-            buttonStartManualRecording.setEnabled(true);
-            buttonStartManualRecording.setTextColor(Color.BLACK);
-            buttonStartManualRecording.setText("Start Manual Recording");
-            buttonStartManualRecording.setBackgroundColor(buttonColorEnabled);
-        }
+
         UpdateLocationSelectionSpinner();
         GPSEnabled = logic.spatialManager.isGPSEnabled();
         bluetoothEnabled = logic.bluetoothManager.IsBluetoothEnabled();
@@ -599,10 +657,16 @@ public class MainActivity extends AppCompatActivity {
         }
         else
         {
-            if(logic.aranetManager.aranetDevice == null)
+            String targetID = UserIDManager.loadTargetDeviceID(this);
+            if(logic.aranetManager.aranetDevice == null && UserIDManager.loadTargetDeviceID(this).length()<2)
             {
-                textViewSensorStatus.setText("Aranet Device not found, next attempt in " + timeToNextUpdate + " seconds" );
+                textViewSensorStatus.setText("Aranet Device not found yet" );
             }
+            else if(logic.aranetManager.aranetDevice == null && UserIDManager.loadTargetDeviceID(this).length()>=2)
+            {
+                textViewSensorStatus.setText("Aranet Device with ID: " +targetID + " not found yet");
+            }
+
             else if(logic.aranetManager.currentReading != null && logic.aranetManager.UpdateInterval >60)
             {
                 textViewSensorStatus.setText("Device found but Update Interval not set to 1 Minute, change to 1 Minute using official App. next attempt in " + timeToNextUpdate + " seconds");
@@ -647,6 +711,23 @@ public class MainActivity extends AppCompatActivity {
             buttonStartRecording.setEnabled(false);
             buttonStartRecording.setBackgroundColor(buttonColorDisabled);
         }
+
+        if(GPSEnabled && locationPermission && bluetoothEnabled && bluetoothConnectPermission && bluetoothScanPermission && updateIntervalSetTo1Minute && deviceFound && enableManualRecordingButton)
+        {
+            buttonStartManualRecording.setEnabled(true);
+            buttonStartManualRecording.setTextColor(Color.BLACK);
+            buttonStartManualRecording.setText("Start Manual Recording");
+            buttonStartManualRecording.setBackgroundColor(buttonColorEnabled);
+        }
+        else
+        {
+            buttonStartManualRecording.setEnabled(false);
+            buttonStartManualRecording.setTextColor(Color.LTGRAY);
+            buttonStartManualRecording.setText("Start Manual Recording (not all requirements met) ");
+            buttonStartManualRecording.setBackgroundColor(buttonColorDisabled);
+        }
+
+
 
         if(GPSEnabled && locationPermission)
         {

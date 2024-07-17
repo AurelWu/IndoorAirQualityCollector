@@ -344,6 +344,26 @@
                 android:textColor="#000000"
                 android:textColorLink="#FFFFFF" />
 
+            <Switch
+                android:id="@+id/switchAdvanced"
+                android:checked="false"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#FFFFFF"
+                android:text="Show Advanced Options" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/TextInputLayoutSetDeviceID"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/TextInputEditTextSetDevice"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="set Device ID to only connect to this device" />
+            </com.google.android.material.textfield.TextInputLayout>
+
             <Space
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

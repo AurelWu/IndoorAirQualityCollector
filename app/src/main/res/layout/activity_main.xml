@@ -311,6 +311,19 @@
             </LinearLayout>
 
             <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/buttonResumeRecording"
+                style="@style/CustomButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#CAA5DA"
+                android:enabled="false"
+                android:onClick="OnResumeRecordingButton"
+                android:text="Resume Recording"
+                android:textColor="#000000"
+                android:textColorLink="#FFFFFF"
+                android:textSize="24sp" />
+
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/buttonStartRecording"
                 style="@style/CustomButton"
                 android:layout_width="match_parent"

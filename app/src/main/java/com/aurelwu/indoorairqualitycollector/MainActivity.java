@@ -46,10 +46,14 @@ import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
 
+    //DONE? TODO: write to recoveryData when recording
+    //DONE TODO: delete recoveryData when transmitted succesfully/canceled
+    //TODO: IF recoveryData is not zeroed out, then display "resume recording" button if last update wasnt more than 30 minutes ago
+    public static RecoveryData recoveryData;
+
     private boolean manualTransmissionMode = false;
     private boolean enableManualRecordingButton = false;
     private boolean showExactLocation = false;
-    //private PowerManager.WakeLock wakeLock;
     Switch switchAdvancedOptions;
 
     ImageButton buttonGPSStatus;
@@ -60,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
     ImageButton buttonBluetoothConnectPermission;
     AppCompatButton buttonStartRecording;
 
+    AppCompatButton buttonResumeRecording;
     AppCompatButton buttonStartManualRecording;
     AppCompatButton buttonFinishRecording;
 
@@ -169,6 +174,7 @@ public class MainActivity extends AppCompatActivity {
         textViewPermissionAndServiceStatus = findViewById(R.id.textViewStatus);
         textViewSensorStatus = findViewById(R.id.textViewSensorStatus);
         textViewLocationStatus = findViewById(R.id.textViewLocationStatus);
+        buttonResumeRecording = findViewById(R.id.buttonResumeRecording);
         buttonStartRecording = findViewById(R.id.buttonStartRecording);
         buttonStartManualRecording = findViewById(R.id.buttonStartRecordingManual);
         buttonFinishRecording = findViewById(R.id.buttonFinishRecording);
@@ -228,18 +234,13 @@ public class MainActivity extends AppCompatActivity {
         textInputEditTextDeviceID = findViewById(R.id.TextInputEditTextSetDevice);
         textInputLayoutDeviceID = findViewById(R.id.TextInputLayoutSetDeviceID);
 
-
-
-
-
-
-
         layoutOccupancy = findViewById(R.id.LinearLayoutOccupancy);
         buttonCancelRecording = findViewById(R.id.buttonAbort);
-
-
         locationSpinner = findViewById(R.id.spinnerSelectLocation);
 
+        recoveryData = RecoveryData.ReadFromPreferences(this);
+
+        buttonResumeRecording.setVisibility(View.GONE);
         buttonStartManualRecording.setEnabled(false);
         buttonStartManualRecording.setBackgroundColor(buttonColorDisabled);
         buttonStartManualRecording.setTextColor(Color.LTGRAY);
@@ -325,14 +326,9 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        // Acquire the wakelock
-        //PowerManager powerManager = (PowerManager) this.getSystemService(Context.POWER_SERVICE);
-        //wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "IndoorCO2App::SensorDataRecordingWakelock");
-        //wakeLock.acquire();
-
-        //TODO:
         textInputEditTextCustomNotes.setText("");
         textViewCC0.setVisibility(View.GONE);
+        buttonResumeRecording.setVisibility(View.GONE);
         buttonFinishRecording.setEnabled(false);
         buttonFinishRecording.setBackgroundColor(buttonColorDisabled);
         layoutStopRecording.setVisibility(View.VISIBLE);
@@ -347,14 +343,20 @@ public class MainActivity extends AppCompatActivity {
         lineChartView.invalidate();
         layoutCheckboxes.setVisibility(View.VISIBLE);
         textInputLayoutCustomNotes.setVisibility(View.VISIBLE);
-        //layoutOccupancy.setVisibility(View.VISIBLE);
         layoutOccupancy.setVisibility(View.GONE); // For now we won't track this, its subjective anyways and less UI Elements = better
         buttonOpenMapInBrowser.setVisibility(View.GONE);
         buttonImpressumDataProtection.setVisibility(View.GONE);
-        //constraintLayoutMap.setVisibility(View.GONE);
         chartRangeSlider.ReInit();
 
-        logic.StartNewRecording(selectedLocation.ID,selectedLocation.type, selectedLocation.Name,selectedLocation.latitude,selectedLocation.longitude,System.currentTimeMillis());
+        logic.StartNewRecording(selectedLocation.ID,selectedLocation.type, selectedLocation.Name,selectedLocation.latitude,selectedLocation.longitude,System.currentTimeMillis(),true);
+        recoveryData.locationType= selectedLocation.type;
+        recoveryData.locationID=selectedLocation.ID ;
+        recoveryData.locationName= selectedLocation.Name;
+        recoveryData.locationLon=(float)selectedLocation.longitude;
+        recoveryData.locationLat=(float)selectedLocation.latitude;
+        recoveryData.startTime=System.currentTimeMillis();
+        recoveryData.timeOfLastUpdate=System.currentTimeMillis();
+        recoveryData.WriteToPreferences(this);
         checkBoxVentilationSystem.setChecked(false);
         checkBoxWindowsDoors.setChecked(false);
         occupancyLevel = "undefined";
@@ -389,6 +391,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void OnTransmissionSuccess()
     {
+
+        RecoveryData.DeleteRecoveryData(this);
+        recoveryData = RecoveryData.ReadFromPreferences(this);
         buttonFinishRecording.setTextColor(Color.LTGRAY);
         buttonFinishRecording.setText("Transmission successful!");
 
@@ -445,7 +450,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which)
             {
                 logic.aranetManager.FinishRecording();
-
+                RecoveryData.DeleteRecoveryData(logic.spatialManager.mainActivity);
+                recoveryData = RecoveryData.ReadFromPreferences(logic.spatialManager.mainActivity);
                 OnStopRecordingChangeUI();
 
             }
@@ -467,6 +473,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void OnStopRecordingChangeUI()
     {
+        RecoveryData.DeleteRecoveryData(this);
         textViewCC0.setVisibility(View.GONE);
         buttonStartRecording.setVisibility(View.VISIBLE);
         buttonStartManualRecording.setVisibility(View.VISIBLE);
@@ -687,6 +694,31 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
+        if(recoveryData.locationID!=0 && buttonStartRecording.getVisibility() == View.VISIBLE) //check vs normal recording button ensures that it doesnt show in recording mode once we submit the data
+        {
+            buttonResumeRecording.setVisibility(View.VISIBLE);
+            if(GPSEnabled && locationPermission && bluetoothEnabled && bluetoothConnectPermission &&bluetoothScanPermission && updateIntervalSetTo1Minute && deviceFound)
+            {
+                buttonResumeRecording.setEnabled(true);
+                buttonResumeRecording.setBackgroundColor(buttonColorEnabled);
+                buttonResumeRecording.setTextColor(Color.BLACK);
+            }
+            else
+            {
+                buttonResumeRecording.setEnabled(false);
+                buttonResumeRecording.setBackgroundColor(buttonColorDisabled);
+                buttonResumeRecording.setTextColor(Color.LTGRAY);
+            }
+        }
+        else
+        {
+            buttonResumeRecording.setVisibility(View.GONE);
+        }
+        if(logic.aranetManager.isRecording)
+        {
+            buttonResumeRecording.setVisibility(View.GONE);
+        }
+
         if(GPSEnabled && locationPermission && bluetoothEnabled && bluetoothConnectPermission && bluetoothScanPermission && updateIntervalSetTo1Minute && deviceFound)
         {
             if(logic.spatialManager.overpassModule.locationData.size() == 0)
@@ -741,6 +773,10 @@ public class MainActivity extends AppCompatActivity {
                     {
                         textViewLocationStatus.append(" | last update not successful (Status: ) " + logic.aranetManager.failureID);
                     }
+                }
+                else if(logic.aranetManager.isRecording && recoveryData.locationName !=null && recoveryData.locationName.length()>0)
+                {
+                    textViewLocationStatus.setText("Recording data of Location: " + recoveryData.locationName);
                 }
                 else
                 {
@@ -1020,5 +1056,46 @@ public class MainActivity extends AppCompatActivity {
     public void OnShowExactLocation(View view)
     {
         showExactLocation = !showExactLocation;
+    }
+
+    public void OnResumeRecordingButton(View view)
+    {
+        manualTransmissionMode=false;
+        transmissionState = "none";
+
+
+        logic.StartNewRecording(recoveryData.locationID,recoveryData.locationType, recoveryData.locationName, recoveryData.locationLat, recoveryData.locationLon, recoveryData.startTime,false);
+
+        //This UI stuff should really be put in a method itself so it doesnt duplicate/triplicate
+        textInputEditTextCustomNotes.setText("");
+        textViewCC0.setVisibility(View.GONE);
+        buttonResumeRecording.setVisibility(View.GONE);
+        buttonFinishRecording.setEnabled(false);
+        buttonFinishRecording.setBackgroundColor(buttonColorDisabled);
+        layoutStopRecording.setVisibility(View.VISIBLE);
+        layoutSearchRangeSelection.setVisibility(View.GONE);
+        layoutLocationSelection.setVisibility(View.GONE);
+        buttonStartRecording.setVisibility(View.GONE);
+        buttonStartManualRecording.setVisibility(View.GONE);
+        buttonUpdateNearByLocations.setVisibility(View.GONE);
+        chartContainer.setVisibility(View.VISIBLE);
+        chartRangeSliderContainer.setVisibility(View.VISIBLE);
+        lineChartView.setVisibility(View.VISIBLE);
+        lineChartView.invalidate();
+        layoutCheckboxes.setVisibility(View.VISIBLE);
+        textInputLayoutCustomNotes.setVisibility(View.VISIBLE);
+        layoutOccupancy.setVisibility(View.GONE); // For now we won't track this, its subjective anyways and less UI Elements = better
+        buttonOpenMapInBrowser.setVisibility(View.GONE);
+        buttonImpressumDataProtection.setVisibility(View.GONE);
+        chartRangeSlider.ReInit();
+        checkBoxVentilationSystem.setChecked(false);
+        checkBoxWindowsDoors.setChecked(false);
+        occupancyLevel = "undefined";
+        textInputLayoutDeviceID.setVisibility(View.GONE);
+        switchAdvancedOptions.setVisibility(View.GONE);
+        textInputLayoutDeviceID.setVisibility(View.GONE);
+        textInputEditTextDeviceID.setVisibility(View.GONE);
+
+
     }
 }

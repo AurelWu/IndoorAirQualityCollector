@@ -51,6 +51,7 @@ public class AranetManager {
     public String aranetMAC;
     public String aranetDeviceName;
 
+    public boolean prerecording;
     public int rssi = 0;
     public int txPower = 0;
 
@@ -84,11 +85,22 @@ public class AranetManager {
         this.usedGatts = new ArrayList<>();
     }
 
-    public void StartNewRecording() {
+    public void StartNewRecording(boolean deleteOldData,boolean prerecording) {
         isRecording = true;
+        this.prerecording = prerecording;
         sensorData = new ArrayList<>();
+        if(deleteOldData)
+        {
+            timeOfRecordingStart = System.currentTimeMillis(); //Unix Epoch
+        }
+        else
+        {
+            timeOfRecordingStart = MainActivity.recoveryData.startTime;
+            Update();
+        }
 
-        timeOfRecordingStart = System.currentTimeMillis(); //Unix Epoch
+        //MainActivity.recoveryData.startTime=timeOfRecordingStart;
+
     }
 
     public void FinishRecording() {
@@ -320,7 +332,15 @@ public class AranetManager {
                 {
                     long timeDifferenceLocation = System.currentTimeMillis() - timeOfRecordingStart;
                     elapsedMinutes = (short) ((timeDifferenceLocation + 59999) / 60000); // Adding 59999 to ensure rounding up
-                    startidx = (short) (totalDataPoints - (0 + elapsedMinutes)); //change value to start with a bit of pre-recording history
+                    if(!prerecording)
+                    {
+                        startidx = (short) (totalDataPoints - (0 + elapsedMinutes)); //change value to start with a bit of pre-recording history
+                    }
+                    else
+                    {
+                        startidx = (short) (totalDataPoints - (15 + elapsedMinutes)); //change value to start with a bit of pre-recording history
+                    }
+
                     if (startidx < 0)
                     {
                         startidx = 0;
@@ -385,7 +405,8 @@ public class AranetManager {
                     sensorData.add(new SensorData(co2dataArray[i], i));
                 }
 
-
+                MainActivity.recoveryData.timeOfLastUpdate=System.currentTimeMillis();
+                MainActivity.recoveryData.WriteToPreferences(mainActivity);
                 //put at end here
                 gatt.disconnect();
                 gatt.close();

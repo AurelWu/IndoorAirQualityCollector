@@ -15,6 +15,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -51,10 +52,12 @@ public class MainActivity extends AppCompatActivity {
     //TODO: IF recoveryData is not zeroed out, then display "resume recording" button if last update wasnt more than 30 minutes ago
     public static RecoveryData recoveryData;
 
+    public String selectedCO2Device = "Aranet";
     private boolean manualTransmissionMode = false;
     private boolean enableManualRecordingButton = false;
     private boolean showExactLocation = false;
     Switch switchAdvancedOptions;
+    Switch switchPrerecording;
 
     ImageButton buttonGPSStatus;
     ImageButton buttonLocationPermissionStatus;
@@ -120,6 +123,9 @@ public class MainActivity extends AppCompatActivity {
     TextInputEditText textInputEditTextCustomNotes;
     TextInputEditText textInputEditTextManualName;
     TextInputEditText textInputEditTextManualAddress;
+
+    LinearLayout CO2DeviceSelectorContainer;
+
     LinearLayout layoutOccupancy;
 
     LinearLayout chartContainer;
@@ -162,7 +168,11 @@ public class MainActivity extends AppCompatActivity {
 
         logic = new Logic(this);
 
+        CO2DeviceSelectorContainer = findViewById(R.id.LinearLayoutCO2DeviceSelector);
+        Spinner CO2DeviceSpinner = findViewById(R.id.spinnerSelectCO2Device);
+
         switchAdvancedOptions = findViewById(R.id.switchAdvanced);
+        switchPrerecording = findViewById(R.id.switchPrerecording);
 
         textViewCC0 = findViewById(R.id.textViewCC0);
         buttonUpdateNearByLocations = findViewById(R.id.buttonUpdateNearbyLocations);
@@ -256,6 +266,7 @@ public class MainActivity extends AppCompatActivity {
 
         logic.spatialManager.searchRadius = searchRadius;
 
+        switchPrerecording.setVisibility(View.GONE);
         textInputEditTextDeviceID.setVisibility(View.GONE);
         textInputEditTextDeviceID.setText(UserIDManager.loadTargetDeviceID(this));
 
@@ -264,9 +275,11 @@ public class MainActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
                 if (isChecked) {
+                    switchPrerecording.setVisibility(View.VISIBLE);
                     textInputEditTextDeviceID.setVisibility(View.VISIBLE);
                     textInputLayoutDeviceID.setVisibility(View.VISIBLE);
                 } else {
+                    switchPrerecording.setVisibility(View.GONE);
                     textInputEditTextDeviceID.setVisibility(View.GONE);
                     textInputLayoutDeviceID.setVisibility(View.GONE);
                 }
@@ -292,6 +305,31 @@ public class MainActivity extends AppCompatActivity {
 
         });
 
+        String[] items = {"Aranet", "Airvalent", "Inkbird IAM-T1"};
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
+        CO2DeviceSpinner.setAdapter(adapter);
+
+        CO2DeviceSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                // Call a method whenever an item is selected
+                onCO2DeviceSelected(parent.getItemAtPosition(position).toString());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // Optionally handle the case where no item is selected
+            }
+        });
+
+        String sel = UserIDManager.LoadSelectedDeviceType(this);
+        if (sel != null) {
+            selectedCO2Device=sel;
+            int position = adapter.getPosition(sel);
+            if (position >= 0) {
+                CO2DeviceSpinner.setSelection(position);
+            }
+        }
 
 
 
@@ -313,6 +351,12 @@ public class MainActivity extends AppCompatActivity {
         //}
     }
 
+    private void onCO2DeviceSelected(String selectedDevice)
+    {
+        selectedCO2Device=selectedDevice;
+        UserIDManager.SaveSelectedDeviceType(this,selectedDevice);
+    }
+
     public void OnStartRecordingButton(View view)
     {
 
@@ -325,7 +369,7 @@ public class MainActivity extends AppCompatActivity {
             //maybe display message that no location selected?)
             return;
         }
-
+        CO2DeviceSelectorContainer.setVisibility(View.GONE);
         textInputEditTextCustomNotes.setText("");
         textViewCC0.setVisibility(View.GONE);
         buttonResumeRecording.setVisibility(View.GONE);
@@ -348,7 +392,7 @@ public class MainActivity extends AppCompatActivity {
         buttonImpressumDataProtection.setVisibility(View.GONE);
         chartRangeSlider.ReInit();
 
-        logic.StartNewRecording(selectedLocation.ID,selectedLocation.type, selectedLocation.Name,selectedLocation.latitude,selectedLocation.longitude,System.currentTimeMillis(),true);
+        logic.StartNewRecording(selectedLocation.ID,selectedLocation.type, selectedLocation.Name,selectedLocation.latitude,selectedLocation.longitude,System.currentTimeMillis(),true,switchPrerecording.isChecked());
         recoveryData.locationType= selectedLocation.type;
         recoveryData.locationID=selectedLocation.ID ;
         recoveryData.locationName= selectedLocation.Name;
@@ -362,6 +406,7 @@ public class MainActivity extends AppCompatActivity {
         occupancyLevel = "undefined";
         textInputLayoutDeviceID.setVisibility(View.GONE);
         switchAdvancedOptions.setVisibility(View.GONE);
+        switchPrerecording.setVisibility(View.GONE);
         textInputLayoutDeviceID.setVisibility(View.GONE);
         textInputEditTextDeviceID.setVisibility(View.GONE);
 
@@ -474,6 +519,7 @@ public class MainActivity extends AppCompatActivity {
     public void OnStopRecordingChangeUI()
     {
         RecoveryData.DeleteRecoveryData(this);
+        CO2DeviceSelectorContainer.setVisibility(View.VISIBLE);
         textViewCC0.setVisibility(View.GONE);
         buttonStartRecording.setVisibility(View.VISIBLE);
         buttonStartManualRecording.setVisibility(View.VISIBLE);
@@ -507,11 +553,13 @@ public class MainActivity extends AppCompatActivity {
         switchAdvancedOptions.setVisibility(View.VISIBLE);
         if(switchAdvancedOptions.isChecked())
         {
+            switchPrerecording.setVisibility(View.VISIBLE);
             textInputEditTextDeviceID.setVisibility(View.VISIBLE);
             textInputLayoutDeviceID.setVisibility(View.VISIBLE);
         }
         else
         {
+            switchPrerecording.setVisibility(View.GONE);
             textInputEditTextDeviceID.setVisibility(View.GONE);
             textInputLayoutDeviceID.setVisibility(View.GONE);
         }
@@ -667,11 +715,15 @@ public class MainActivity extends AppCompatActivity {
             String targetID = UserIDManager.loadTargetDeviceID(this);
             if(logic.aranetManager.aranetDevice == null && UserIDManager.loadTargetDeviceID(this).length()<2)
             {
-                textViewSensorStatus.setText("Aranet Device not found yet" );
+                textViewSensorStatus.setText("Device not found yet" );
+                if(selectedCO2Device.equals("Inkbird IAM-T1"))
+                {
+                    textViewSensorStatus.setText("Device not found yet, needs to be bonded and Device name must include 'IAM-T1'" );
+                }
             }
             else if(logic.aranetManager.aranetDevice == null && UserIDManager.loadTargetDeviceID(this).length()>=2)
             {
-                textViewSensorStatus.setText("Aranet Device with ID: " +targetID + " not found yet");
+                textViewSensorStatus.setText("Device with ID: " +targetID + " not found yet");
             }
 
             else if(logic.aranetManager.currentReading != null && logic.aranetManager.UpdateInterval >60)
@@ -691,6 +743,7 @@ public class MainActivity extends AppCompatActivity {
             else if(logic.aranetManager.currentReading == null)
             {
                 textViewSensorStatus.setText("Waiting for first sensor update. This might take a Minute | ID: " + logic.aranetManager.aranetMAC + " | rssi: " + logic.aranetManager.rssi + "GattS: " +logic.aranetManager.GattStatus);
+
             }
         }
 
@@ -987,6 +1040,7 @@ public class MainActivity extends AppCompatActivity {
         textViewCC0.setVisibility(View.GONE);
         buttonFinishRecording.setEnabled(false);
         buttonFinishRecording.setBackgroundColor(buttonColorDisabled);
+        CO2DeviceSelectorContainer.setVisibility(View.GONE);
         layoutStopRecording.setVisibility(View.VISIBLE);
         layoutSearchRangeSelection.setVisibility(View.GONE);
         layoutLocationSelection.setVisibility(View.GONE);
@@ -1006,7 +1060,7 @@ public class MainActivity extends AppCompatActivity {
         //constraintLayoutMap.setVisibility(View.GONE);
         chartRangeSlider.ReInit();
 
-        logic.StartNewManualRecording(System.currentTimeMillis());
+        logic.StartNewManualRecording(System.currentTimeMillis(),switchPrerecording.isChecked());
         checkBoxVentilationSystem.setChecked(false);
         checkBoxWindowsDoors.setChecked(false);
         occupancyLevel = "undefined";
@@ -1064,7 +1118,7 @@ public class MainActivity extends AppCompatActivity {
         transmissionState = "none";
 
 
-        logic.StartNewRecording(recoveryData.locationID,recoveryData.locationType, recoveryData.locationName, recoveryData.locationLat, recoveryData.locationLon, recoveryData.startTime,false);
+        logic.StartNewRecording(recoveryData.locationID,recoveryData.locationType, recoveryData.locationName, recoveryData.locationLat, recoveryData.locationLon, recoveryData.startTime,false,switchPrerecording.isChecked());
 
         //This UI stuff should really be put in a method itself so it doesnt duplicate/triplicate
         textInputEditTextCustomNotes.setText("");
@@ -1093,8 +1147,10 @@ public class MainActivity extends AppCompatActivity {
         occupancyLevel = "undefined";
         textInputLayoutDeviceID.setVisibility(View.GONE);
         switchAdvancedOptions.setVisibility(View.GONE);
+        switchPrerecording.setVisibility(View.GONE);
         textInputLayoutDeviceID.setVisibility(View.GONE);
         textInputEditTextDeviceID.setVisibility(View.GONE);
+        CO2DeviceSelectorContainer.setVisibility(View.GONE);
 
 
     }

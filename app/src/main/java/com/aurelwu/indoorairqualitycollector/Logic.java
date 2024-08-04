@@ -17,16 +17,16 @@ public class Logic {
         aranetManager = new AranetManager(bluetoothManager,mainActivity);
     }
 
-    public void StartNewRecording(long nwrID,String nwrType, String nwrName, double nwrLat, double nwrLon, long startTime, boolean deleteOldData)
+    public void StartNewRecording(long nwrID,String nwrType, String nwrName, double nwrLat, double nwrLon, long startTime, boolean deleteOldData, boolean preRecording)
     {
         submissionData = new SubmissionData(UserIDManager.GetEncryptedID(spatialManager.mainActivity, aranetManager.aranetMAC.toString()),nwrType, nwrID,nwrName,nwrLat,nwrLon,startTime);
-        aranetManager.StartNewRecording(deleteOldData); //we dont' provide full submissionData to aranetManager and rather collect its Data once FinishRecording is called from here
+        aranetManager.StartNewRecording(deleteOldData,preRecording); //we dont' provide full submissionData to aranetManager and rather collect its Data once FinishRecording is called from here
     }
 
-    public void StartNewManualRecording(long startTime)
+    public void StartNewManualRecording(long startTime,boolean preRecording)
     {
         submissionDataManual = new SubmissionDataManual(UserIDManager.GetEncryptedID(spatialManager.mainActivity, aranetManager.aranetMAC.toString()),startTime);
-        aranetManager.StartNewRecording(true);
+        aranetManager.StartNewRecording(true, preRecording);
         //=> manual recording only has startTime initially, it will submit GPS coordinate for every minute as well as CO2 Data and it will have a mandatory Name Field and a optional Address field
 
     }

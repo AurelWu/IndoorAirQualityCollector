@@ -8,6 +8,7 @@ public class UserIDManager {
     private static final String PREF_USER_ID = "user_id";
     private static final String PREF_NAME = "IndoorDataCollectorUserID";
     private static final String TargetDeviceID = "IndoorDataCollectorDeviceID";
+    private static final String SelectedDeviceTypeID = "IndoorDataCollectorDeviceType";
 
     public static String getUserID(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
@@ -35,6 +36,20 @@ public class UserIDManager {
         SharedPreferences sharedPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         String deviceID = sharedPreferences.getString(TargetDeviceID,"");
         return deviceID;
+    }
+
+    public static void SaveSelectedDeviceType(Context context, String deviceType)
+    {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(SelectedDeviceTypeID, deviceType);
+        editor.apply();
+    }
+    public static String LoadSelectedDeviceType(Context context)
+    {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        String device = sharedPreferences.getString(SelectedDeviceTypeID,"Aranet"); //we default to Aranet if nothing set
+        return device;
     }
 
     private static String generateRandomID() {
